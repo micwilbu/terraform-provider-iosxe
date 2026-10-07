@@ -1,0 +1,66 @@
+---
+name: Redundancy Application Group
+path: /Cisco-IOS-XE-native:native/redundancy/application/redundancy/group[id=%v]
+doc_category: Redundancy
+attributes:
+  - yang_name: id
+    tf_name: group_id
+    id: true
+    example: 1
+  - yang_name: name/group-name
+    tf_name: name
+    exclude_test: true
+    example: cube-rg-1
+  - yang_name: priority/value
+    tf_name: priority
+    exclude_test: true
+    example: 100
+  - yang_name: priority/failover/threshold
+    tf_name: failover_threshold
+    exclude_test: true
+    example: 75
+  - yang_name: timers/delay
+    tf_name: timers_delay
+    exclude_test: true
+    example: 30
+  - yang_name: timers/reload
+    tf_name: timers_reload
+    exclude_test: true
+    example: 60
+  - yang_name: control/interface
+    tf_name: control_interface
+    exclude_test: true
+    example: GigabitEthernet4
+  - yang_name: control/protocol
+    tf_name: control_protocol
+    exclude_test: true
+    example: 1
+  - yang_name: data
+    tf_name: data_interface
+    exclude_test: true
+    example: GigabitEthernet4
+  - yang_name: preempt
+    exclude_test: true
+    example: true
+  - yang_name: shutdown
+    exclude_test: true
+    example: false
+  - yang_name: Cisco-IOS-XE-track:track
+    xpath: Cisco-IOS-XE-track:track
+    tf_name: track
+    type: List
+    exclude_test: true
+    attributes:
+      - yang_name: object-number
+        tf_name: object_number
+        id: true
+        example: 1
+      - yang_name: decrement-shutdown/shutdown-case/shutdown
+        xpath: shutdown
+        tf_name: shutdown
+        example: true
+      - yang_name: decrement-shutdown/decrement-case/decrement
+        xpath: decrement
+        tf_name: decrement
+        exclude_test: true
+        example: 10
