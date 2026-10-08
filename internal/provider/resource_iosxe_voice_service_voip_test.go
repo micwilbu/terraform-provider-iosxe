@@ -53,6 +53,8 @@ func TestAccIosxeVoiceServiceVoIP(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_service_voip.test", "supplementary_service_media_renegotiate", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_service_voip.test", "fax_protocol", "t38"))
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_service_voip.test", "trace", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_service_voip.test", "stun_flowdata_agent_id", "1"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_service_voip.test", "stun_flowdata_boot_count", "6"))
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_service_voip.test", "sip_session_refresh", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_service_voip.test", "sip_session_transport_tcp_tls", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_service_voip.test", "sip_header_passing", "true"))
@@ -61,6 +63,7 @@ func TestAccIosxeVoiceServiceVoIP(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_service_voip.test", "sip_asserted_id_pai", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_service_voip.test", "sip_asymmetric_payload_full", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_service_voip.test", "sip_srtp_negotiate_cisco", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_service_voip.test", "sip_early_offer_forced", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_service_voip.test", "sip_pass_thru_headers_unsupp", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_service_voip.test", "sip_pass_thru_content_unsupp", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_service_voip.test", "sip_audio_forced", "true"))
@@ -87,7 +90,7 @@ func TestAccIosxeVoiceServiceVoIP(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateIdFunc:       iosxeVoiceServiceVoIPImportStateIdFunc("iosxe_voice_service_voip.test"),
-				ImportStateVerifyIgnore: []string{"ip_address_trusted_call_block", "supplementary_service_sip_refer", "sip_call_service_stop", "sip_early_offer_forced", "sip_midcall_signaling_passthru"},
+				ImportStateVerifyIgnore: []string{"ip_address_trusted_call_block", "supplementary_service_sip_refer", "sip_call_service_stop", "sip_midcall_signaling_passthru", "sip_sip_profiles_inbound_enable"},
 				Check:                   resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -146,6 +149,8 @@ func testAccIosxeVoiceServiceVoIPConfig_all() string {
 	config += `	supplementary_service_media_renegotiate = true` + "\n"
 	config += `	fax_protocol = "t38"` + "\n"
 	config += `	trace = true` + "\n"
+	config += `	stun_flowdata_agent_id = 1` + "\n"
+	config += `	stun_flowdata_boot_count = 6` + "\n"
 	config += `	sip_session_refresh = true` + "\n"
 	config += `	sip_session_transport_tcp_tls = true` + "\n"
 	config += `	sip_header_passing = true` + "\n"
@@ -154,6 +159,7 @@ func testAccIosxeVoiceServiceVoIPConfig_all() string {
 	config += `	sip_asserted_id_pai = true` + "\n"
 	config += `	sip_asymmetric_payload_full = true` + "\n"
 	config += `	sip_srtp_negotiate_cisco = true` + "\n"
+	config += `	sip_early_offer_forced = true` + "\n"
 	config += `	sip_pass_thru_headers_unsupp = true` + "\n"
 	config += `	sip_pass_thru_content_unsupp = true` + "\n"
 	config += `	sip_audio_forced = true` + "\n"

@@ -35,6 +35,7 @@ data "iosxe_sip_ua" "example" {
 - `connection_reuse` (Boolean) Use listener port for sending requests over UDP
 - `connection_reuse_via_port` (Boolean) Send responses to port present in Via header
 - `credentials_dhcp_password` (String, Sensitive)
+- `credentials_dhcp_password_type` (String)
 - `credentials_dhcp_realm` (String) Realm at which the credentials are applicable
 - `credentials_numbers` (Attributes List) (see [below for nested schema](#nestedatt--credentials_numbers))
 - `credentials_usernames` (Attributes List) (see [below for nested schema](#nestedatt--credentials_usernames))

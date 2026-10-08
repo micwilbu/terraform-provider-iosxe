@@ -115,11 +115,9 @@ attributes:
   # --- STUN (media path optimization / ICE; pairs with voice class stun-usage) ---
   - yang_name: stun/stun/flowdata/agent-id-config/agent-id
     tf_name: stun_flowdata_agent_id
-    exclude_test: true # device rejects the `no stun flowdata agent-id ...` form on 17.16+
     example: 1
   - yang_name: stun/stun/flowdata/agent-id-config/boot-count
     tf_name: stun_flowdata_boot_count
-    exclude_test: true
     example: 6
   # --- SIP ---
   - yang_name: sip/call/service/stop
@@ -164,14 +162,18 @@ attributes:
     example: true
   - yang_name: sip/early-offer/forced
     tf_name: sip_early_offer_forced
-    exclude_test: true # device rejects the `no early-offer forced` form on 17.16+
     example: true
   - yang_name: sip/midcall-signaling/passthru
     xpath: sip/midcall-signaling/passthru
     tf_name: sip_midcall_signaling_passthru
     type: Bool
     type_yang_bool: presence
-    exclude_test: true # device rejects the `no midcall-signaling passthru` form on 17.16+
+    # Individual `no midcall-signaling passthru` works, but during teardown the
+    # device refuses it when batched with `no allow-connections sip to sip` (its
+    # `when` parent): "inconsistent value: Device refused one or more commands"
+    # (seen on 17.18.03a). Excluded from the lifecycle test until the provider
+    # can order that removal before allow-connections.
+    exclude_test: true
     example: true
   - yang_name: sip/pass-thru/headers/headers-choice/unsupp-case/unsupp
     xpath: sip/pass-thru/headers/unsupp
@@ -262,3 +264,11 @@ attributes:
     tf_name: sip_sip_profiles_inbound
     exclude_test: true
     example: 1
+  # `inbound` empty leaf turns the inbound SIP-profiles feature on; setting the
+  # id alone does not (verified on 17.18: id-only reads back without inbound).
+  - yang_name: sip/sip-profiles/sip-profiles-inbound/inbound
+    tf_name: sip_sip_profiles_inbound_enable
+    type: Bool
+    type_yang_bool: presence
+    exclude_test: true
+    example: true

@@ -268,6 +268,10 @@ func (d *SIPUADataSource) Schema(ctx context.Context, req datasource.SchemaReque
 					},
 				},
 			},
+			"credentials_dhcp_password_type": schema.StringAttribute{
+				MarkdownDescription: "",
+				Computed:            true,
+			},
 			"credentials_dhcp_password": schema.StringAttribute{
 				MarkdownDescription: "",
 				Computed:            true,

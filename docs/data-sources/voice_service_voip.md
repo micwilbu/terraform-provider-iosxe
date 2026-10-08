@@ -84,6 +84,7 @@ data "iosxe_voice_service_voip" "example" {
 - `sip_session_transport_tcp_tls` (Boolean) Transport Layer Protocol - TLS over TCP
 - `sip_sip_profiles` (String) The sip profiles tag number to be linked as global
 - `sip_sip_profiles_inbound` (String) The sip profiles tag number to be linked as global
+- `sip_sip_profiles_inbound_enable` (Boolean) Turn on inbound SIP profiles feature
 - `sip_srtp_negotiate_cisco` (Boolean) allow RTP answer to SRTP offer
 - `sip_update_callerid` (Boolean) Enable sending updates for callerid
 - `srtp_fallback` (Boolean) Allow Secure calls fallback to non secure

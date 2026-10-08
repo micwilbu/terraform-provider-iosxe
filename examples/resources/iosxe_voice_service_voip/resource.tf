@@ -18,6 +18,8 @@ resource "iosxe_voice_service_voip" "example" {
   supplementary_service_media_renegotiate     = true
   fax_protocol                                = "t38"
   trace                                       = true
+  stun_flowdata_agent_id                      = 1
+  stun_flowdata_boot_count                    = 6
   sip_session_refresh                         = true
   sip_session_transport_tcp_tls               = true
   sip_header_passing                          = true
@@ -26,6 +28,7 @@ resource "iosxe_voice_service_voip" "example" {
   sip_asserted_id_pai                         = true
   sip_asymmetric_payload_full                 = true
   sip_srtp_negotiate_cisco                    = true
+  sip_early_offer_forced                      = true
   sip_pass_thru_headers_unsupp                = true
   sip_pass_thru_content_unsupp                = true
   sip_audio_forced                            = true

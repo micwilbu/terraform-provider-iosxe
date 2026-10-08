@@ -77,6 +77,7 @@ type SIPUA struct {
 	AuthenticationRealm                  types.String                      `tfsdk:"authentication_realm"`
 	CredentialsNumbers                   []SIPUACredentialsNumbers         `tfsdk:"credentials_numbers"`
 	CredentialsUsernames                 []SIPUACredentialsUsernames       `tfsdk:"credentials_usernames"`
+	CredentialsDhcpPasswordType          types.String                      `tfsdk:"credentials_dhcp_password_type"`
 	CredentialsDhcpPassword              types.String                      `tfsdk:"credentials_dhcp_password"`
 	CredentialsDhcpPasswordWO            types.String                      `tfsdk:"credentials_dhcp_password_wo"`
 	CredentialsDhcpPasswordWOVersion     types.Int64                       `tfsdk:"credentials_dhcp_password_wo_version"`
@@ -158,6 +159,7 @@ type SIPUAData struct {
 	AuthenticationRealm              types.String                          `tfsdk:"authentication_realm"`
 	CredentialsNumbers               []SIPUACredentialsNumbersData         `tfsdk:"credentials_numbers"`
 	CredentialsUsernames             []SIPUACredentialsUsernamesData       `tfsdk:"credentials_usernames"`
+	CredentialsDhcpPasswordType      types.String                          `tfsdk:"credentials_dhcp_password_type"`
 	CredentialsDhcpPassword          types.String                          `tfsdk:"credentials_dhcp_password"`
 	CredentialsDhcpRealm             types.String                          `tfsdk:"credentials_dhcp_realm"`
 	RegistrarPrimary                 types.String                          `tfsdk:"registrar_primary"`
@@ -437,6 +439,9 @@ func (data SIPUA) addToBodyXML(ctx context.Context, config SIPUA, body netconf.B
 			}
 			body = helpers.SetRawFromXPath(body, data.getXPath()+"/credentials/username-list", cBody.Res())
 		}
+	}
+	if !data.CredentialsDhcpPasswordType.IsNull() && !data.CredentialsDhcpPasswordType.IsUnknown() {
+		body = helpers.SetFromXPath(body, data.getXPath()+"/credentials/dhcp/password/encryption", data.CredentialsDhcpPasswordType.ValueString())
 	}
 	if !data.CredentialsDhcpPassword.IsNull() && !data.CredentialsDhcpPassword.IsUnknown() {
 		if !config.CredentialsDhcpPasswordWO.IsNull() {
@@ -812,6 +817,11 @@ func (data *SIPUA) updateFromBodyXML(ctx context.Context, res xmldot.Result) {
 			data.CredentialsUsernames[i].Realm = types.StringNull()
 		}
 	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/credentials/dhcp/password/encryption"); value.Exists() && !data.CredentialsDhcpPasswordType.IsNull() {
+		data.CredentialsDhcpPasswordType = types.StringValue(value.String())
+	} else {
+		data.CredentialsDhcpPasswordType = types.StringNull()
+	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/credentials/dhcp/realm"); value.Exists() && !data.CredentialsDhcpRealm.IsNull() {
 		data.CredentialsDhcpRealm = types.StringValue(value.String())
 	} else {
@@ -1098,6 +1108,9 @@ func (data *SIPUA) fromBodyXML(ctx context.Context, res xmldot.Result) {
 			return true
 		})
 	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/credentials/dhcp/password/encryption"); value.Exists() {
+		data.CredentialsDhcpPasswordType = types.StringValue(value.String())
+	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/credentials/dhcp/password/password-string"); value.Exists() {
 		data.CredentialsDhcpPassword = types.StringValue(value.String())
 	}
@@ -1337,6 +1350,9 @@ func (data *SIPUAData) fromBodyXML(ctx context.Context, res xmldot.Result) {
 			return true
 		})
 	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/credentials/dhcp/password/encryption"); value.Exists() {
+		data.CredentialsDhcpPasswordType = types.StringValue(value.String())
+	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/credentials/dhcp/password/password-string"); value.Exists() {
 		data.CredentialsDhcpPassword = types.StringValue(value.String())
 	}
@@ -1475,6 +1491,9 @@ func (data *SIPUA) addDeletedItemsXML(ctx context.Context, state SIPUA, body str
 	}
 	if !state.CredentialsDhcpPassword.IsNull() && data.CredentialsDhcpPassword.IsNull() {
 		b = helpers.RemoveFromXPath(b, state.getXPath()+"/credentials/dhcp/password/password-string")
+	}
+	if !state.CredentialsDhcpPasswordType.IsNull() && data.CredentialsDhcpPasswordType.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/credentials/dhcp/password/encryption")
 	}
 	for i := range state.CredentialsUsernames {
 		stateKeys := [...]string{"username"}
@@ -1742,6 +1761,9 @@ func (data *SIPUA) addDeletePathsXML(ctx context.Context, body string) string {
 	}
 	if !data.CredentialsDhcpPassword.IsNull() {
 		b = helpers.RemoveFromXPath(b, data.getXPath()+"/credentials/dhcp/password/password-string")
+	}
+	if !data.CredentialsDhcpPasswordType.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/credentials/dhcp/password/encryption")
 	}
 	for i := range data.CredentialsUsernames {
 		keys := [...]string{"username"}

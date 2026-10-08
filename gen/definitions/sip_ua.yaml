@@ -153,6 +153,10 @@ attributes:
         example: Cisco123
       - yang_name: realm
         example: cisco.com
+  - yang_name: credentials/dhcp/password/encryption
+    tf_name: credentials_dhcp_password_type
+    exclude_test: true
+    example: "0"
   - yang_name: credentials/dhcp/password/password-string
     tf_name: credentials_dhcp_password
     sensitive: true

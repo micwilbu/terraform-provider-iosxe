@@ -336,6 +336,10 @@ func (d *VoiceServiceVoIPDataSource) Schema(ctx context.Context, req datasource.
 				MarkdownDescription: "The sip profiles tag number to be linked as global",
 				Computed:            true,
 			},
+			"sip_sip_profiles_inbound_enable": schema.BoolAttribute{
+				MarkdownDescription: "Turn on inbound SIP profiles feature",
+				Computed:            true,
+			},
 		},
 	}
 }

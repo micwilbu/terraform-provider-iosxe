@@ -33,6 +33,8 @@ resource "iosxe_voice_service_voip" "example" {
   supplementary_service_media_renegotiate     = true
   fax_protocol                                = "t38"
   trace                                       = true
+  stun_flowdata_agent_id                      = 1
+  stun_flowdata_boot_count                    = 6
   sip_session_refresh                         = true
   sip_session_transport_tcp_tls               = true
   sip_header_passing                          = true
@@ -41,6 +43,7 @@ resource "iosxe_voice_service_voip" "example" {
   sip_asserted_id_pai                         = true
   sip_asymmetric_payload_full                 = true
   sip_srtp_negotiate_cisco                    = true
+  sip_early_offer_forced                      = true
   sip_pass_thru_headers_unsupp                = true
   sip_pass_thru_content_unsupp                = true
   sip_audio_forced                            = true
@@ -127,6 +130,7 @@ resource "iosxe_voice_service_voip" "example" {
 - `sip_session_transport_tcp_tls` (Boolean) Transport Layer Protocol - TLS over TCP
 - `sip_sip_profiles` (String) The sip profiles tag number to be linked as global
 - `sip_sip_profiles_inbound` (String) The sip profiles tag number to be linked as global
+- `sip_sip_profiles_inbound_enable` (Boolean) Turn on inbound SIP profiles feature
 - `sip_srtp_negotiate_cisco` (Boolean) allow RTP answer to SRTP offer
 - `sip_update_callerid` (Boolean) Enable sending updates for callerid
 - `srtp_fallback` (Boolean) Allow Secure calls fallback to non secure

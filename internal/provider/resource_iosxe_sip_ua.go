@@ -384,6 +384,13 @@ func (r *SIPUAResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					},
 				},
 			},
+			"credentials_dhcp_password_type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("0", "6", "7").String,
+				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("0", "6", "7"),
+				},
+			},
 			"credentials_dhcp_password": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("").String,
 				Optional:            true,

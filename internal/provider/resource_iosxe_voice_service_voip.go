@@ -402,6 +402,10 @@ func (r *VoiceServiceVoIPResource) Schema(ctx context.Context, req resource.Sche
 				MarkdownDescription: helpers.NewAttributeDescription("The sip profiles tag number to be linked as global").String,
 				Optional:            true,
 			},
+			"sip_sip_profiles_inbound_enable": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Turn on inbound SIP profiles feature").String,
+				Optional:            true,
+			},
 		},
 	}
 }

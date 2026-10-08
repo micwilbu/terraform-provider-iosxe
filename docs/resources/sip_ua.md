@@ -60,6 +60,7 @@ resource "iosxe_sip_ua" "example" {
 - `connection_reuse` (Boolean) Use listener port for sending requests over UDP
 - `connection_reuse_via_port` (Boolean) Send responses to port present in Via header
 - `credentials_dhcp_password` (String, Sensitive)
+- `credentials_dhcp_password_type` (String) - Choices: `0`, `6`, `7`
 - `credentials_dhcp_password_wo` (String, [Write-only](https://developer.hashicorp.com/terraform/language/resources/ephemeral#write-only-arguments)) The write-only value of the attribute.
 - `credentials_dhcp_password_wo_version` (Number) The write-only version of the attribute.
 - `credentials_dhcp_realm` (String) Realm at which the credentials are applicable

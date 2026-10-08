@@ -104,6 +104,7 @@ type VoiceServiceVoIP struct {
 	SipConnReuse                                    types.Bool                                 `tfsdk:"sip_conn_reuse"`
 	SipSipProfiles                                  types.String                               `tfsdk:"sip_sip_profiles"`
 	SipSipProfilesInbound                           types.String                               `tfsdk:"sip_sip_profiles_inbound"`
+	SipSipProfilesInboundEnable                     types.Bool                                 `tfsdk:"sip_sip_profiles_inbound_enable"`
 }
 type VoiceServiceVoIPIpAddressTrustedListIpv4 struct {
 	Address types.String `tfsdk:"address"`
@@ -177,6 +178,7 @@ type VoiceServiceVoIPData struct {
 	SipConnReuse                                    types.Bool                                     `tfsdk:"sip_conn_reuse"`
 	SipSipProfiles                                  types.String                                   `tfsdk:"sip_sip_profiles"`
 	SipSipProfilesInbound                           types.String                                   `tfsdk:"sip_sip_profiles_inbound"`
+	SipSipProfilesInboundEnable                     types.Bool                                     `tfsdk:"sip_sip_profiles_inbound_enable"`
 }
 type VoiceServiceVoIPIpAddressTrustedListIpv4Data struct {
 	Address types.String `tfsdk:"address"`
@@ -576,6 +578,13 @@ func (data VoiceServiceVoIP) addToBodyXML(ctx context.Context, config VoiceServi
 	}
 	if !data.SipSipProfilesInbound.IsNull() && !data.SipSipProfilesInbound.IsUnknown() {
 		body = helpers.SetFromXPath(body, data.getXPath()+"/sip/sip-profiles/sip-profiles-inbound/id", data.SipSipProfilesInbound.ValueString())
+	}
+	if !data.SipSipProfilesInboundEnable.IsNull() && !data.SipSipProfilesInboundEnable.IsUnknown() {
+		if data.SipSipProfilesInboundEnable.ValueBool() {
+			body = helpers.SetFromXPath(body, data.getXPath()+"/sip/sip-profiles/sip-profiles-inbound/inbound", "")
+		} else {
+			body = helpers.RemoveFromXPath(body, data.getXPath()+"/sip/sip-profiles/sip-profiles-inbound/inbound")
+		}
 	}
 	return body
 }
@@ -1092,6 +1101,15 @@ func (data *VoiceServiceVoIP) updateFromBodyXML(ctx context.Context, res xmldot.
 	} else {
 		data.SipSipProfilesInbound = types.StringNull()
 	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/sip/sip-profiles/sip-profiles-inbound/inbound"); !data.SipSipProfilesInboundEnable.IsNull() {
+		if value.Exists() {
+			data.SipSipProfilesInboundEnable = types.BoolValue(true)
+		} else {
+			data.SipSipProfilesInboundEnable = types.BoolValue(false)
+		}
+	} else {
+		data.SipSipProfilesInboundEnable = types.BoolNull()
+	}
 }
 
 // End of section. //template:end updateFromBodyXML
@@ -1380,6 +1398,11 @@ func (data *VoiceServiceVoIP) fromBodyXML(ctx context.Context, res xmldot.Result
 	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/sip/sip-profiles/sip-profiles-inbound/id"); value.Exists() {
 		data.SipSipProfilesInbound = types.StringValue(value.String())
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/sip/sip-profiles/sip-profiles-inbound/inbound"); value.Exists() {
+		data.SipSipProfilesInboundEnable = types.BoolValue(true)
+	} else {
+		data.SipSipProfilesInboundEnable = types.BoolValue(false)
 	}
 }
 
@@ -1670,6 +1693,11 @@ func (data *VoiceServiceVoIPData) fromBodyXML(ctx context.Context, res xmldot.Re
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/sip/sip-profiles/sip-profiles-inbound/id"); value.Exists() {
 		data.SipSipProfilesInbound = types.StringValue(value.String())
 	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/sip/sip-profiles/sip-profiles-inbound/inbound"); value.Exists() {
+		data.SipSipProfilesInboundEnable = types.BoolValue(true)
+	} else {
+		data.SipSipProfilesInboundEnable = types.BoolValue(false)
+	}
 }
 
 // End of section. //template:end fromBodyDataXML
@@ -1678,6 +1706,9 @@ func (data *VoiceServiceVoIPData) fromBodyXML(ctx context.Context, res xmldot.Re
 
 func (data *VoiceServiceVoIP) addDeletedItemsXML(ctx context.Context, state VoiceServiceVoIP, body string) string {
 	b := netconf.NewBody(body)
+	if !state.SipSipProfilesInboundEnable.IsNull() && data.SipSipProfilesInboundEnable.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/sip/sip-profiles/sip-profiles-inbound/inbound")
+	}
 	if !state.SipSipProfilesInbound.IsNull() && data.SipSipProfilesInbound.IsNull() {
 		b = helpers.RemoveFromXPath(b, state.getXPath()+"/sip/sip-profiles/sip-profiles-inbound/id")
 	}
@@ -1905,6 +1936,9 @@ func (data *VoiceServiceVoIP) addDeletedItemsXML(ctx context.Context, state Voic
 
 func (data *VoiceServiceVoIP) addDeletePathsXML(ctx context.Context, body string) string {
 	b := netconf.NewBody(body)
+	if !data.SipSipProfilesInboundEnable.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/sip/sip-profiles/sip-profiles-inbound/inbound")
+	}
 	if !data.SipSipProfilesInbound.IsNull() {
 		b = helpers.RemoveFromXPath(b, data.getXPath()+"/sip/sip-profiles/sip-profiles-inbound/id")
 	}
