@@ -2,6 +2,8 @@
 name: SIP UA
 path: /Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:sip-ua
 doc_category: Voice
+# CUBE is a router feature; a switch rejects `sip-ua`.
+test_tags: [C8000V]
 # Always-present global singleton; delete the managed attributes individually
 # rather than the container (same pattern as system, line).
 no_delete: true

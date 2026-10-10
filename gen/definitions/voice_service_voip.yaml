@@ -2,6 +2,8 @@
 name: Voice Service VoIP
 path: /Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:voice/service[type=%v]
 doc_category: Voice
+# CUBE is a router feature; a switch rejects `voice service voip`.
+test_tags: [C8000V]
 # Always-present global singleton: the device protects the default `fax protocol
 # t38`, so the whole `voice service voip` container cannot be deleted. Delete the
 # managed attributes individually instead (same pattern as system, line).
