@@ -2,6 +2,8 @@
 name: Voice Class URI
 path: /Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:voice/class/uri/uri[uritag=%v]
 doc_category: Voice
+# CUBE is a router feature; a switch rejects these voice class resources.
+test_tags: [C8000V]
 attributes:
   - yang_name: uritag
     tf_name: tag

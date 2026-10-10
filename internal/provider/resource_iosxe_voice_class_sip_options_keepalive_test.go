@@ -22,6 +22,7 @@ package provider
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -33,8 +34,17 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
 func TestAccIosxeVoiceClassSIPOptionsKeepalive(t *testing.T) {
+	if os.Getenv("C8000V") == "" {
+		t.Skip("skipping test, set environment variable C8000V")
+	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_sip_options_keepalive.test", "tag", "200"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_sip_options_keepalive.test", "description", "ITSP keepalive profile"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_sip_options_keepalive.test", "up_interval", "60"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_sip_options_keepalive.test", "down_interval", "30"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_sip_options_keepalive.test", "retry", "5"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_sip_options_keepalive.test", "transport_tcp", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_sip_options_keepalive.test", "transport_tcp_tls", "true"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -51,7 +61,7 @@ func TestAccIosxeVoiceClassSIPOptionsKeepalive(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateIdFunc:       iosxeVoiceClassSIPOptionsKeepaliveImportStateIdFunc("iosxe_voice_class_sip_options_keepalive.test"),
-				ImportStateVerifyIgnore: []string{"transport_udp", "transport_tcp", "transport_tcp_tls"},
+				ImportStateVerifyIgnore: []string{"transport_udp"},
 				Check:                   resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -92,6 +102,12 @@ func testAccIosxeVoiceClassSIPOptionsKeepaliveConfig_minimum() string {
 func testAccIosxeVoiceClassSIPOptionsKeepaliveConfig_all() string {
 	config := `resource "iosxe_voice_class_sip_options_keepalive" "test" {` + "\n"
 	config += `	tag = 200` + "\n"
+	config += `	description = "ITSP keepalive profile"` + "\n"
+	config += `	up_interval = 60` + "\n"
+	config += `	down_interval = 30` + "\n"
+	config += `	retry = 5` + "\n"
+	config += `	transport_tcp = true` + "\n"
+	config += `	transport_tcp_tls = true` + "\n"
 	config += `}` + "\n"
 	return config
 }

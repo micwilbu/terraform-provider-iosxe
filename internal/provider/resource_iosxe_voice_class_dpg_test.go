@@ -22,6 +22,7 @@ package provider
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -33,8 +34,12 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
 func TestAccIosxeVoiceClassDPG(t *testing.T) {
+	if os.Getenv("C8000V") == "" {
+		t.Skip("skipping test, set environment variable C8000V")
+	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_dpg.test", "tag", "200"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_dpg.test", "shutdown", "true"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -51,7 +56,7 @@ func TestAccIosxeVoiceClassDPG(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateIdFunc:       iosxeVoiceClassDPGImportStateIdFunc("iosxe_voice_class_dpg.test"),
-				ImportStateVerifyIgnore: []string{"shutdown"},
+				ImportStateVerifyIgnore: []string{},
 				Check:                   resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -92,6 +97,7 @@ func testAccIosxeVoiceClassDPGConfig_minimum() string {
 func testAccIosxeVoiceClassDPGConfig_all() string {
 	config := `resource "iosxe_voice_class_dpg" "test" {` + "\n"
 	config += `	tag = 200` + "\n"
+	config += `	shutdown = true` + "\n"
 	config += `}` + "\n"
 	return config
 }
