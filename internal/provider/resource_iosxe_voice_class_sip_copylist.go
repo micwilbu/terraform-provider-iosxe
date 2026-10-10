@@ -105,7 +105,7 @@ func (r *VoiceClassSIPCopylistResource) Schema(ctx context.Context, req resource
 				MarkdownDescription: helpers.NewAttributeDescription("SIP Status-Line to be sent to peer leg").String,
 				Optional:            true,
 			},
-			"headers": schema.ListAttribute{
+			"headers": schema.SetAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Header name of header to be sent to peer leg").String,
 				ElementType:         types.StringType,
 				Optional:            true,

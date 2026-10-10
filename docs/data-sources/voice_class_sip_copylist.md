@@ -31,7 +31,7 @@ data "iosxe_voice_class_sip_copylist" "example" {
 
 ### Read-Only
 
-- `headers` (List of String) Header name of header to be sent to peer leg
+- `headers` (Set of String) Header name of header to be sent to peer leg
 - `id` (String) The path of the retrieved object.
 - `sip_header_req_uri` (Boolean) SIP Request URI to be sent to peer leg
 - `sip_header_status_line` (Boolean) SIP Status-Line to be sent to peer leg

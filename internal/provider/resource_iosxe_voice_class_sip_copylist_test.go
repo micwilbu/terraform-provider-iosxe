@@ -22,6 +22,7 @@ package provider
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -33,9 +34,13 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
 func TestAccIosxeVoiceClassSIPCopylist(t *testing.T) {
+	if os.Getenv("C8000V") == "" {
+		t.Skip("skipping test, set environment variable C8000V")
+	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_sip_copylist.test", "tag", "100"))
-	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_sip_copylist.test", "headers.0", "History-Info"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_sip_copylist.test", "sip_header_req_uri", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_sip_copylist.test", "sip_header_status_line", "true"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -52,7 +57,7 @@ func TestAccIosxeVoiceClassSIPCopylist(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateIdFunc:       iosxeVoiceClassSIPCopylistImportStateIdFunc("iosxe_voice_class_sip_copylist.test"),
-				ImportStateVerifyIgnore: []string{"sip_header_req_uri", "sip_header_status_line"},
+				ImportStateVerifyIgnore: []string{},
 				Check:                   resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -93,6 +98,8 @@ func testAccIosxeVoiceClassSIPCopylistConfig_minimum() string {
 func testAccIosxeVoiceClassSIPCopylistConfig_all() string {
 	config := `resource "iosxe_voice_class_sip_copylist" "test" {` + "\n"
 	config += `	tag = 100` + "\n"
+	config += `	sip_header_req_uri = true` + "\n"
+	config += `	sip_header_status_line = true` + "\n"
 	config += `	headers = ["History-Info"]` + "\n"
 	config += `}` + "\n"
 	return config

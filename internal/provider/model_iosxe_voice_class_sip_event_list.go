@@ -41,14 +41,14 @@ type VoiceClassSIPEventList struct {
 	Id         types.String `tfsdk:"id"`
 	DeleteMode types.String `tfsdk:"delete_mode"`
 	Tag        types.Int64  `tfsdk:"tag"`
-	Events     types.List   `tfsdk:"events"`
+	Events     types.Set    `tfsdk:"events"`
 }
 
 type VoiceClassSIPEventListData struct {
 	Device types.String `tfsdk:"device"`
 	Id     types.String `tfsdk:"id"`
 	Tag    types.Int64  `tfsdk:"tag"`
-	Events types.List   `tfsdk:"events"`
+	Events types.Set    `tfsdk:"events"`
 }
 
 // End of section. //template:end types
@@ -116,9 +116,9 @@ func (data *VoiceClassSIPEventList) updateFromBodyXML(ctx context.Context, res x
 		data.Tag = types.Int64Null()
 	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/event"); value.Exists() && !data.Events.IsNull() {
-		data.Events = helpers.GetStringListXML(value.Array())
+		data.Events = helpers.GetStringSetXML(value.Array())
 	} else {
-		data.Events = types.ListNull(types.StringType)
+		data.Events = types.SetNull(types.StringType)
 	}
 }
 
@@ -128,9 +128,9 @@ func (data *VoiceClassSIPEventList) updateFromBodyXML(ctx context.Context, res x
 
 func (data *VoiceClassSIPEventList) fromBodyXML(ctx context.Context, res xmldot.Result) {
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/event"); value.Exists() {
-		data.Events = helpers.GetStringListXML(value.Array())
+		data.Events = helpers.GetStringSetXML(value.Array())
 	} else {
-		data.Events = types.ListNull(types.StringType)
+		data.Events = types.SetNull(types.StringType)
 	}
 }
 
@@ -140,9 +140,9 @@ func (data *VoiceClassSIPEventList) fromBodyXML(ctx context.Context, res xmldot.
 
 func (data *VoiceClassSIPEventListData) fromBodyXML(ctx context.Context, res xmldot.Result) {
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/event"); value.Exists() {
-		data.Events = helpers.GetStringListXML(value.Array())
+		data.Events = helpers.GetStringSetXML(value.Array())
 	} else {
-		data.Events = types.ListNull(types.StringType)
+		data.Events = types.SetNull(types.StringType)
 	}
 }
 

@@ -14,8 +14,9 @@ This resource can manage the Voice Class SIP Header Passthrulist configuration.
 
 ```terraform
 resource "iosxe_voice_class_sip_header_passthrulist" "example" {
-  tag              = 100
-  passthru_headers = ["Call-Info"]
+  tag                 = 100
+  passthru_headers    = ["Call-Info"]
+  passthru_hdr_unsupp = true
 }
 ```
 
@@ -33,7 +34,7 @@ resource "iosxe_voice_class_sip_header_passthrulist" "example" {
   - Choices: `all`, `attributes`
 - `device` (String) A device name from the provider configuration.
 - `passthru_hdr_unsupp` (Boolean) Enable the pass-thru of all unsupported headers
-- `passthru_headers` (List of String) Add hdr in the list of hdrs to be passed thru
+- `passthru_headers` (Set of String) Add hdr in the list of hdrs to be passed thru
 
 ### Read-Only
 

@@ -14,8 +14,10 @@ This resource can manage the Voice Class SIP Copylist configuration.
 
 ```terraform
 resource "iosxe_voice_class_sip_copylist" "example" {
-  tag     = 100
-  headers = ["History-Info"]
+  tag                    = 100
+  sip_header_req_uri     = true
+  sip_header_status_line = true
+  headers                = ["History-Info"]
 }
 ```
 
@@ -32,7 +34,7 @@ resource "iosxe_voice_class_sip_copylist" "example" {
 - `delete_mode` (String) Configure behavior when deleting/destroying the resource. Either delete the entire object (YANG container) being managed, or only delete the individual resource attributes configured explicitly and leave everything else as-is. Default value is `all`.
   - Choices: `all`, `attributes`
 - `device` (String) A device name from the provider configuration.
-- `headers` (List of String) Header name of header to be sent to peer leg
+- `headers` (Set of String) Header name of header to be sent to peer leg
 - `sip_header_req_uri` (Boolean) SIP Request URI to be sent to peer leg
 - `sip_header_status_line` (Boolean) SIP Status-Line to be sent to peer leg
 

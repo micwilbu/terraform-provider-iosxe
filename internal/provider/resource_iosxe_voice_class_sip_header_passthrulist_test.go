@@ -22,6 +22,7 @@ package provider
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -33,9 +34,12 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
 func TestAccIosxeVoiceClassSIPHeaderPassthrulist(t *testing.T) {
+	if os.Getenv("C8000V") == "" {
+		t.Skip("skipping test, set environment variable C8000V")
+	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_sip_header_passthrulist.test", "tag", "100"))
-	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_sip_header_passthrulist.test", "passthru_headers.0", "Call-Info"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_sip_header_passthrulist.test", "passthru_hdr_unsupp", "true"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -52,7 +56,7 @@ func TestAccIosxeVoiceClassSIPHeaderPassthrulist(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateIdFunc:       iosxeVoiceClassSIPHeaderPassthrulistImportStateIdFunc("iosxe_voice_class_sip_header_passthrulist.test"),
-				ImportStateVerifyIgnore: []string{"passthru_hdr_unsupp"},
+				ImportStateVerifyIgnore: []string{},
 				Check:                   resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -94,6 +98,7 @@ func testAccIosxeVoiceClassSIPHeaderPassthrulistConfig_all() string {
 	config := `resource "iosxe_voice_class_sip_header_passthrulist" "test" {` + "\n"
 	config += `	tag = 100` + "\n"
 	config += `	passthru_headers = ["Call-Info"]` + "\n"
+	config += `	passthru_hdr_unsupp = true` + "\n"
 	config += `}` + "\n"
 	return config
 }

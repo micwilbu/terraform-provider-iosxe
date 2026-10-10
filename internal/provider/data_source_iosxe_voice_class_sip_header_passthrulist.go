@@ -72,7 +72,7 @@ func (d *VoiceClassSIPHeaderPassthrulistDataSource) Schema(ctx context.Context, 
 				MarkdownDescription: "Voice class sip-hdr-passthrulist tag",
 				Required:            true,
 			},
-			"passthru_headers": schema.ListAttribute{
+			"passthru_headers": schema.SetAttribute{
 				MarkdownDescription: "Add hdr in the list of hdrs to be passed thru",
 				ElementType:         types.StringType,
 				Computed:            true,

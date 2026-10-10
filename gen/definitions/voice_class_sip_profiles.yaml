@@ -2,6 +2,8 @@
 name: Voice Class SIP Profiles
 path: /Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:voice/class/sip-profiles[id=%v]
 doc_category: Voice
+# CUBE is a router feature; a switch rejects these voice class resources.
+test_tags: [C8000V]
 # NOTE: SIP-profile rules are a very deep, choice-heavy YANG tree
 # (rule -> rule-response-request -> rule-choice -> request/response-case -> ...
 #  -> sip-header -> header-choice -> modify-case -> MODIFY -> pattern/replace).
@@ -66,7 +68,7 @@ attributes:
         xpath: rule-response-request/request/sip-header/ADD
         tf_name: request_sip_header_add
         exclude_test: true
-        example: "Route: <sip:10.0.0.1;lr>"
+        example: "Route: <sip:198.51.100.1;lr>"
       - yang_name: rule-response-request/rule-choice/request-case/request/request-response-choice/sip-header-choice/sip-header/header-choice/remove-case/REMOVE
         xpath: rule-response-request/request/sip-header/REMOVE
         tf_name: request_sip_header_remove

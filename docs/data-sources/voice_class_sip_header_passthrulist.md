@@ -33,4 +33,4 @@ data "iosxe_voice_class_sip_header_passthrulist" "example" {
 
 - `id` (String) The path of the retrieved object.
 - `passthru_hdr_unsupp` (Boolean) Enable the pass-thru of all unsupported headers
-- `passthru_headers` (List of String) Add hdr in the list of hdrs to be passed thru
+- `passthru_headers` (Set of String) Add hdr in the list of hdrs to be passed thru

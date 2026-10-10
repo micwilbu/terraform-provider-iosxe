@@ -21,6 +21,7 @@ package provider
 
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -31,6 +32,9 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
 
 func TestAccDataSourceIosxeVoiceClassSIPProfiles(t *testing.T) {
+	if os.Getenv("C8000V") == "" {
+		t.Skip("skipping test, set environment variable C8000V")
+	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_class_sip_profiles.test", "description", "Header normalization"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_class_sip_profiles.test", "rules.0.rule", "10"))

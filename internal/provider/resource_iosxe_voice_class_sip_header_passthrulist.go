@@ -97,7 +97,7 @@ func (r *VoiceClassSIPHeaderPassthrulistResource) Schema(ctx context.Context, re
 					int64planmodifier.RequiresReplace(),
 				},
 			},
-			"passthru_headers": schema.ListAttribute{
+			"passthru_headers": schema.SetAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Add hdr in the list of hdrs to be passed thru").String,
 				ElementType:         types.StringType,
 				Optional:            true,

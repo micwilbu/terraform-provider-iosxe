@@ -97,7 +97,7 @@ func (r *VoiceClassSIPEventListResource) Schema(ctx context.Context, req resourc
 					int64planmodifier.RequiresReplace(),
 				},
 			},
-			"events": schema.ListAttribute{
+			"events": schema.SetAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Add event in the list of events to be passed thru").String,
 				ElementType:         types.StringType,
 				Optional:            true,

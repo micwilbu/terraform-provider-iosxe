@@ -80,7 +80,7 @@ func (d *VoiceClassSIPCopylistDataSource) Schema(ctx context.Context, req dataso
 				MarkdownDescription: "SIP Status-Line to be sent to peer leg",
 				Computed:            true,
 			},
-			"headers": schema.ListAttribute{
+			"headers": schema.SetAttribute{
 				MarkdownDescription: "Header name of header to be sent to peer leg",
 				ElementType:         types.StringType,
 				Computed:            true,

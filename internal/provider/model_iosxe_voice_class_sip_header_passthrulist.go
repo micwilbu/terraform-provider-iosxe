@@ -41,7 +41,7 @@ type VoiceClassSIPHeaderPassthrulist struct {
 	Id                types.String `tfsdk:"id"`
 	DeleteMode        types.String `tfsdk:"delete_mode"`
 	Tag               types.Int64  `tfsdk:"tag"`
-	PassthruHeaders   types.List   `tfsdk:"passthru_headers"`
+	PassthruHeaders   types.Set    `tfsdk:"passthru_headers"`
 	PassthruHdrUnsupp types.Bool   `tfsdk:"passthru_hdr_unsupp"`
 }
 
@@ -49,7 +49,7 @@ type VoiceClassSIPHeaderPassthrulistData struct {
 	Device            types.String `tfsdk:"device"`
 	Id                types.String `tfsdk:"id"`
 	Tag               types.Int64  `tfsdk:"tag"`
-	PassthruHeaders   types.List   `tfsdk:"passthru_headers"`
+	PassthruHeaders   types.Set    `tfsdk:"passthru_headers"`
 	PassthruHdrUnsupp types.Bool   `tfsdk:"passthru_hdr_unsupp"`
 }
 
@@ -125,9 +125,9 @@ func (data *VoiceClassSIPHeaderPassthrulist) updateFromBodyXML(ctx context.Conte
 		data.Tag = types.Int64Null()
 	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/passthru-hdr"); value.Exists() && !data.PassthruHeaders.IsNull() {
-		data.PassthruHeaders = helpers.GetStringListXML(value.Array())
+		data.PassthruHeaders = helpers.GetStringSetXML(value.Array())
 	} else {
-		data.PassthruHeaders = types.ListNull(types.StringType)
+		data.PassthruHeaders = types.SetNull(types.StringType)
 	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/passthru-hdr-unsupp"); !data.PassthruHdrUnsupp.IsNull() {
 		if value.Exists() {
@@ -146,9 +146,9 @@ func (data *VoiceClassSIPHeaderPassthrulist) updateFromBodyXML(ctx context.Conte
 
 func (data *VoiceClassSIPHeaderPassthrulist) fromBodyXML(ctx context.Context, res xmldot.Result) {
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/passthru-hdr"); value.Exists() {
-		data.PassthruHeaders = helpers.GetStringListXML(value.Array())
+		data.PassthruHeaders = helpers.GetStringSetXML(value.Array())
 	} else {
-		data.PassthruHeaders = types.ListNull(types.StringType)
+		data.PassthruHeaders = types.SetNull(types.StringType)
 	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/passthru-hdr-unsupp"); value.Exists() {
 		data.PassthruHdrUnsupp = types.BoolValue(true)
@@ -163,9 +163,9 @@ func (data *VoiceClassSIPHeaderPassthrulist) fromBodyXML(ctx context.Context, re
 
 func (data *VoiceClassSIPHeaderPassthrulistData) fromBodyXML(ctx context.Context, res xmldot.Result) {
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/passthru-hdr"); value.Exists() {
-		data.PassthruHeaders = helpers.GetStringListXML(value.Array())
+		data.PassthruHeaders = helpers.GetStringSetXML(value.Array())
 	} else {
-		data.PassthruHeaders = types.ListNull(types.StringType)
+		data.PassthruHeaders = types.SetNull(types.StringType)
 	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/passthru-hdr-unsupp"); value.Exists() {
 		data.PassthruHdrUnsupp = types.BoolValue(true)

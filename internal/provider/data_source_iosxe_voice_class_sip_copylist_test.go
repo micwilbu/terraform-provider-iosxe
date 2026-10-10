@@ -21,6 +21,7 @@ package provider
 
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -31,8 +32,12 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
 
 func TestAccDataSourceIosxeVoiceClassSIPCopylist(t *testing.T) {
+	if os.Getenv("C8000V") == "" {
+		t.Skip("skipping test, set environment variable C8000V")
+	}
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_class_sip_copylist.test", "headers.0", "History-Info"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_class_sip_copylist.test", "sip_header_req_uri", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_class_sip_copylist.test", "sip_header_status_line", "true"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -56,6 +61,8 @@ func testAccDataSourceIosxeVoiceClassSIPCopylistConfig() string {
 	config := `resource "iosxe_voice_class_sip_copylist" "test" {` + "\n"
 	config += `	delete_mode = "attributes"` + "\n"
 	config += `	tag = 100` + "\n"
+	config += `	sip_header_req_uri = true` + "\n"
+	config += `	sip_header_status_line = true` + "\n"
 	config += `	headers = ["History-Info"]` + "\n"
 	config += `}` + "\n"
 

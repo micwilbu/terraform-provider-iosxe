@@ -72,7 +72,7 @@ func (d *VoiceClassSIPEventListDataSource) Schema(ctx context.Context, req datas
 				MarkdownDescription: "Voice class sip-event-list tag",
 				Required:            true,
 			},
-			"events": schema.ListAttribute{
+			"events": schema.SetAttribute{
 				MarkdownDescription: "Add event in the list of events to be passed thru",
 				ElementType:         types.StringType,
 				Computed:            true,

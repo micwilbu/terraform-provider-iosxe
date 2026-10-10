@@ -43,7 +43,7 @@ type VoiceClassSIPCopylist struct {
 	Tag                 types.Int64  `tfsdk:"tag"`
 	SipHeaderReqUri     types.Bool   `tfsdk:"sip_header_req_uri"`
 	SipHeaderStatusLine types.Bool   `tfsdk:"sip_header_status_line"`
-	Headers             types.List   `tfsdk:"headers"`
+	Headers             types.Set    `tfsdk:"headers"`
 }
 
 type VoiceClassSIPCopylistData struct {
@@ -52,7 +52,7 @@ type VoiceClassSIPCopylistData struct {
 	Tag                 types.Int64  `tfsdk:"tag"`
 	SipHeaderReqUri     types.Bool   `tfsdk:"sip_header_req_uri"`
 	SipHeaderStatusLine types.Bool   `tfsdk:"sip_header_status_line"`
-	Headers             types.List   `tfsdk:"headers"`
+	Headers             types.Set    `tfsdk:"headers"`
 }
 
 // End of section. //template:end types
@@ -152,9 +152,9 @@ func (data *VoiceClassSIPCopylist) updateFromBodyXML(ctx context.Context, res xm
 		data.SipHeaderStatusLine = types.BoolNull()
 	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/sip-header/header"); value.Exists() && !data.Headers.IsNull() {
-		data.Headers = helpers.GetStringListXML(value.Array())
+		data.Headers = helpers.GetStringSetXML(value.Array())
 	} else {
-		data.Headers = types.ListNull(types.StringType)
+		data.Headers = types.SetNull(types.StringType)
 	}
 }
 
@@ -174,9 +174,9 @@ func (data *VoiceClassSIPCopylist) fromBodyXML(ctx context.Context, res xmldot.R
 		data.SipHeaderStatusLine = types.BoolValue(false)
 	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/sip-header/header"); value.Exists() {
-		data.Headers = helpers.GetStringListXML(value.Array())
+		data.Headers = helpers.GetStringSetXML(value.Array())
 	} else {
-		data.Headers = types.ListNull(types.StringType)
+		data.Headers = types.SetNull(types.StringType)
 	}
 }
 
@@ -196,9 +196,9 @@ func (data *VoiceClassSIPCopylistData) fromBodyXML(ctx context.Context, res xmld
 		data.SipHeaderStatusLine = types.BoolValue(false)
 	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/sip-header/header"); value.Exists() {
-		data.Headers = helpers.GetStringListXML(value.Array())
+		data.Headers = helpers.GetStringSetXML(value.Array())
 	} else {
-		data.Headers = types.ListNull(types.StringType)
+		data.Headers = types.SetNull(types.StringType)
 	}
 }
 

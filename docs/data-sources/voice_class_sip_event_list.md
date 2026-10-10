@@ -31,5 +31,5 @@ data "iosxe_voice_class_sip_event_list" "example" {
 
 ### Read-Only
 
-- `events` (List of String) Add event in the list of events to be passed thru
+- `events` (Set of String) Add event in the list of events to be passed thru
 - `id` (String) The path of the retrieved object.
