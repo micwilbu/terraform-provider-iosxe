@@ -3,12 +3,12 @@
 page_title: "iosxe_voice_dspfarm_profile Data Source - terraform-provider-iosxe"
 subcategory: "Voice"
 description: |-
-  This data source can read the Voice DSPFarm Profile configuration.
+  This data source can read the DSPFarm Profile configuration.
 ---
 
 # iosxe_voice_dspfarm_profile (Data Source)
 
-This data source can read the Voice DSPFarm Profile configuration.
+This data source can read the DSPFarm Profile configuration.
 
 ## Example Usage
 

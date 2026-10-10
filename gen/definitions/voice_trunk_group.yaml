@@ -2,6 +2,8 @@
 name: Voice Trunk Group
 path: /Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:trunk/group[id=%v]
 doc_category: Voice
+# CUBE is a router feature; a switch rejects `voice class trunk group`.
+test_tags: [C8000V]
 attributes:
   - yang_name: id
     tf_name: name

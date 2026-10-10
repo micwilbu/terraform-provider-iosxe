@@ -66,7 +66,7 @@ func (r *VoiceDSPFarmProfileResource) Metadata(_ context.Context, req resource.M
 func (r *VoiceDSPFarmProfileResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "This resource can manage the Voice DSPFarm Profile configuration.",
+		MarkdownDescription: "This resource can manage the DSPFarm Profile configuration. Note: IOS-XE refuses to delete a dspfarm profile that is active; set `shutdown = true` before destroying the resource (or remove `no shutdown` on the device first), otherwise the delete fails with `inconsistent value: Device refused one or more commands`. Verified on a C8300 (17.18.03a) with a PVDM4 DSP module.",
 
 		Attributes: map[string]schema.Attribute{
 			"device": schema.StringAttribute{

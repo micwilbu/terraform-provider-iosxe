@@ -3,12 +3,12 @@
 page_title: "iosxe_voice_dspfarm_profile Resource - terraform-provider-iosxe"
 subcategory: "Voice"
 description: |-
-  This resource can manage the Voice DSPFarm Profile configuration.
+  This resource can manage the DSPFarm Profile configuration. Note: IOS-XE refuses to delete a dspfarm profile that is active; set shutdown = true before destroying the resource (or remove no shutdown on the device first), otherwise the delete fails with inconsistent value: Device refused one or more commands. Verified on a C8300 (17.18.03a) with a PVDM4 DSP module.
 ---
 
 # iosxe_voice_dspfarm_profile (Resource)
 
-This resource can manage the Voice DSPFarm Profile configuration.
+This resource can manage the DSPFarm Profile configuration. Note: IOS-XE refuses to delete a dspfarm profile that is active; set `shutdown = true` before destroying the resource (or remove `no shutdown` on the device first), otherwise the delete fails with `inconsistent value: Device refused one or more commands`. Verified on a C8300 (17.18.03a) with a PVDM4 DSP module.
 
 ## Example Usage
 
