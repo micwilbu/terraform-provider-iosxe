@@ -22,6 +22,7 @@ package provider
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -33,6 +34,9 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
 func TestAccIosxeVoiceClassTenant(t *testing.T) {
+	if os.Getenv("C8000V") == "" {
+		t.Skip("skipping test, set environment variable C8000V")
+	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_tenant.test", "tag", "100"))
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_voice_class_tenant.test", "session_transport_tcp_tls", "true"))
@@ -75,10 +79,10 @@ func TestAccIosxeVoiceClassTenant(t *testing.T) {
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccIosxeVoiceClassTenantConfig_minimum(),
+				Config: testAccIosxeVoiceClassTenantPrerequisitesConfig + testAccIosxeVoiceClassTenantConfig_minimum(),
 			},
 			{
-				Config: testAccIosxeVoiceClassTenantConfig_all(),
+				Config: testAccIosxeVoiceClassTenantPrerequisitesConfig + testAccIosxeVoiceClassTenantConfig_all(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 			{
@@ -86,7 +90,7 @@ func TestAccIosxeVoiceClassTenant(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateIdFunc:       iosxeVoiceClassTenantImportStateIdFunc("iosxe_voice_class_tenant.test"),
-				ImportStateVerifyIgnore: []string{"session_transport_tcp", "session_transport_udp", "url_sip", "sip_profiles_inbound", "early_media_update_block", "early_media_update_block_re_negotiate"},
+				ImportStateVerifyIgnore: []string{"session_transport_tcp", "session_transport_udp", "url_sip", "sip_profiles_inbound"},
 				Check:                   resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -109,6 +113,30 @@ func iosxeVoiceClassTenantImportStateIdFunc(resourceName string) resource.Import
 // End of section. //template:end importStateIdFunc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+const testAccIosxeVoiceClassTenantPrerequisitesConfig = `
+resource "iosxe_yang" "PreReq0" {
+	path = "/Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:voice/service[type=voip]"
+	delete = false
+	attributes = {
+		"type" = "voip"
+		"allow-connections/sip/to/sip" = ""
+	}
+}
+
+resource "iosxe_yang" "PreReq1" {
+	path = ""
+	attributes = {
+	}
+}
+
+resource "iosxe_yang" "PreReq2" {
+	path = ""
+	attributes = {
+	}
+}
+
+`
+
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
@@ -116,6 +144,7 @@ func iosxeVoiceClassTenantImportStateIdFunc(resourceName string) resource.Import
 func testAccIosxeVoiceClassTenantConfig_minimum() string {
 	config := `resource "iosxe_voice_class_tenant" "test" {` + "\n"
 	config += `	tag = 100` + "\n"
+	config += `	depends_on = [iosxe_yang.PreReq0, iosxe_yang.PreReq1, iosxe_yang.PreReq2, ]` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -162,6 +191,7 @@ func testAccIosxeVoiceClassTenantConfig_all() string {
 	config += `	options_ping_interval = 60` + "\n"
 	config += `	pass_thru_headers_unsupp = true` + "\n"
 	config += `	pass_thru_content_unsupp = true` + "\n"
+	config += `	depends_on = [iosxe_yang.PreReq0, iosxe_yang.PreReq1, iosxe_yang.PreReq2, ]` + "\n"
 	config += `}` + "\n"
 	return config
 }

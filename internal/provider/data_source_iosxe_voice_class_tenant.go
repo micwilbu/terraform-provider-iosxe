@@ -337,6 +337,15 @@ func (d *VoiceClassTenantDataSource) Schema(ctx context.Context, req datasource.
 				Computed:            true,
 				Sensitive:           true,
 			},
+			"authentication_realm_username": schema.StringAttribute{
+				MarkdownDescription: "name of the user authenticating",
+				Computed:            true,
+			},
+			"authentication_realm_password": schema.StringAttribute{
+				MarkdownDescription: "",
+				Computed:            true,
+				Sensitive:           true,
+			},
 			"authentication_realm": schema.StringAttribute{
 				MarkdownDescription: "Realm at which the credentials are applicable",
 				Computed:            true,
@@ -400,14 +409,6 @@ func (d *VoiceClassTenantDataSource) Schema(ctx context.Context, req datasource.
 			},
 			"analog_dn_dial_peer_tag": schema.Int64Attribute{
 				MarkdownDescription: "POTS dial peer tag",
-				Computed:            true,
-			},
-			"early_media_update_block": schema.BoolAttribute{
-				MarkdownDescription: "Consume SIP Update request with SDP in early-dialog",
-				Computed:            true,
-			},
-			"early_media_update_block_re_negotiate": schema.BoolAttribute{
-				MarkdownDescription: "Enables end-to-end re-negotiation.",
 				Computed:            true,
 			},
 		},

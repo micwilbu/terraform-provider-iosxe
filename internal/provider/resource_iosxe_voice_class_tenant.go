@@ -444,6 +444,27 @@ func (r *VoiceClassTenantResource) Schema(ctx context.Context, req resource.Sche
 				MarkdownDescription: "The write-only version of the attribute.",
 				Optional:            true,
 			},
+			"authentication_realm_username": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("name of the user authenticating").String,
+				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.LengthBetween(4, 70),
+				},
+			},
+			"authentication_realm_password": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				Optional:            true,
+				Sensitive:           true,
+			},
+			"authentication_realm_password_wo": schema.StringAttribute{
+				MarkdownDescription: "The write-only value of the attribute.",
+				WriteOnly:           true,
+				Optional:            true,
+			},
+			"authentication_realm_password_wo_version": schema.Int64Attribute{
+				MarkdownDescription: "The write-only version of the attribute.",
+				Optional:            true,
+			},
 			"authentication_realm": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Realm at which the credentials are applicable").String,
 				Optional:            true,
@@ -552,14 +573,6 @@ func (r *VoiceClassTenantResource) Schema(ctx context.Context, req resource.Sche
 				Validators: []validator.Int64{
 					int64validator.Between(1, 1073741823),
 				},
-			},
-			"early_media_update_block": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Consume SIP Update request with SDP in early-dialog").String,
-				Optional:            true,
-			},
-			"early_media_update_block_re_negotiate": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enables end-to-end re-negotiation.").String,
-				Optional:            true,
 			},
 		},
 	}

@@ -21,6 +21,7 @@ package provider
 
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -31,6 +32,9 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
 
 func TestAccDataSourceIosxeDialPeerVoice(t *testing.T) {
+	if os.Getenv("C8000V") == "" {
+		t.Skip("skipping test, set environment variable C8000V")
+	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_dial_peer_voice.test", "type", "voip"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_dial_peer_voice.test", "description", "Outbound to CUCM"))
@@ -39,12 +43,17 @@ func TestAccDataSourceIosxeDialPeerVoice(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_dial_peer_voice.test", "shutdown", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_dial_peer_voice.test", "vad", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_dial_peer_voice.test", "session_protocol", "sipv2"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_dial_peer_voice.test", "session_server_group", "10"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_dial_peer_voice.test", "voice_class_sip_options_keepalive_profile", "100"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_dial_peer_voice.test", "destination_dpg", "100"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_dial_peer_voice.test", "voice_class_sip_tenant", "100"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_dial_peer_voice.test", "voice_class_sip_profiles", "100"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceIosxeDialPeerVoiceConfig(),
+				Config: testAccDataSourceIosxeDialPeerVoicePrerequisitesConfig + testAccDataSourceIosxeDialPeerVoiceConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -54,6 +63,53 @@ func TestAccDataSourceIosxeDialPeerVoice(t *testing.T) {
 // End of section. //template:end testAccDataSource
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+const testAccDataSourceIosxeDialPeerVoicePrerequisitesConfig = `
+resource "iosxe_yang" "PreReq0" {
+	path = "/Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:voice/service[type=voip]"
+	delete = false
+	attributes = {
+		"type" = "voip"
+		"allow-connections/sip/to/sip" = ""
+	}
+}
+
+resource "iosxe_yang" "PreReq1" {
+	path = "/Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:voice/class/dpg[id=100]"
+	attributes = {
+		"id" = "100"
+	}
+}
+
+resource "iosxe_yang" "PreReq2" {
+	path = "/Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:voice/class/server-group[id=10]"
+	attributes = {
+		"id" = "10"
+	}
+}
+
+resource "iosxe_yang" "PreReq3" {
+	path = "/Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:voice/class/sip-options-keepalive[id=100]"
+	attributes = {
+		"id" = "100"
+	}
+}
+
+resource "iosxe_yang" "PreReq4" {
+	path = "/Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:voice/class/tenant[id=100]"
+	attributes = {
+		"id" = "100"
+	}
+}
+
+resource "iosxe_yang" "PreReq5" {
+	path = "/Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:voice/class/sip-profiles[id=100]"
+	attributes = {
+		"id" = "100"
+	}
+}
+
+`
+
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
@@ -69,6 +125,12 @@ func testAccDataSourceIosxeDialPeerVoiceConfig() string {
 	config += `	shutdown = false` + "\n"
 	config += `	vad = true` + "\n"
 	config += `	session_protocol = "sipv2"` + "\n"
+	config += `	session_server_group = "10"` + "\n"
+	config += `	voice_class_sip_options_keepalive_profile = "100"` + "\n"
+	config += `	destination_dpg = "100"` + "\n"
+	config += `	voice_class_sip_tenant = "100"` + "\n"
+	config += `	voice_class_sip_profiles = "100"` + "\n"
+	config += `	depends_on = [iosxe_yang.PreReq0, iosxe_yang.PreReq1, iosxe_yang.PreReq2, iosxe_yang.PreReq3, iosxe_yang.PreReq4, iosxe_yang.PreReq5, ]` + "\n"
 	config += `}` + "\n"
 
 	config += `

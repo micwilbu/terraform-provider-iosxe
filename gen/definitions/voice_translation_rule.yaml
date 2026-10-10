@@ -2,6 +2,8 @@
 name: Voice Translation Rule
 path: /Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:voice/translation-rule[id=%v]
 doc_category: Voice
+# CUBE is a router feature; a switch rejects these voice resources.
+test_tags: [C8000V]
 attributes:
   - yang_name: id
     tf_name: tag

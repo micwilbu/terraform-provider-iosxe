@@ -21,6 +21,7 @@ package provider
 
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -31,6 +32,9 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
 
 func TestAccDataSourceIosxeVoiceClassTenant(t *testing.T) {
+	if os.Getenv("C8000V") == "" {
+		t.Skip("skipping test, set environment variable C8000V")
+	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_class_tenant.test", "session_transport_tcp_tls", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_class_tenant.test", "localhost", "dns:cube.example.com"))
@@ -72,7 +76,7 @@ func TestAccDataSourceIosxeVoiceClassTenant(t *testing.T) {
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceIosxeVoiceClassTenantConfig(),
+				Config: testAccDataSourceIosxeVoiceClassTenantPrerequisitesConfig + testAccDataSourceIosxeVoiceClassTenantConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -82,6 +86,30 @@ func TestAccDataSourceIosxeVoiceClassTenant(t *testing.T) {
 // End of section. //template:end testAccDataSource
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+const testAccDataSourceIosxeVoiceClassTenantPrerequisitesConfig = `
+resource "iosxe_yang" "PreReq0" {
+	path = "/Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:voice/service[type=voip]"
+	delete = false
+	attributes = {
+		"type" = "voip"
+		"allow-connections/sip/to/sip" = ""
+	}
+}
+
+resource "iosxe_yang" "PreReq1" {
+	path = ""
+	attributes = {
+	}
+}
+
+resource "iosxe_yang" "PreReq2" {
+	path = ""
+	attributes = {
+	}
+}
+
+`
+
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
@@ -125,6 +153,7 @@ func testAccDataSourceIosxeVoiceClassTenantConfig() string {
 	config += `	options_ping_interval = 60` + "\n"
 	config += `	pass_thru_headers_unsupp = true` + "\n"
 	config += `	pass_thru_content_unsupp = true` + "\n"
+	config += `	depends_on = [iosxe_yang.PreReq0, iosxe_yang.PreReq1, iosxe_yang.PreReq2, ]` + "\n"
 	config += `}` + "\n"
 
 	config += `

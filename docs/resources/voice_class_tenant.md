@@ -77,6 +77,10 @@ resource "iosxe_voice_class_tenant" "example" {
 - `authentication_password_wo` (String, [Write-only](https://developer.hashicorp.com/terraform/language/resources/ephemeral#write-only-arguments)) The write-only value of the attribute.
 - `authentication_password_wo_version` (Number) The write-only version of the attribute.
 - `authentication_realm` (String) Realm at which the credentials are applicable
+- `authentication_realm_password` (String, Sensitive)
+- `authentication_realm_password_wo` (String, [Write-only](https://developer.hashicorp.com/terraform/language/resources/ephemeral#write-only-arguments)) The write-only value of the attribute.
+- `authentication_realm_password_wo_version` (Number) The write-only version of the attribute.
+- `authentication_realm_username` (String) name of the user authenticating
 - `authentication_username` (String) name of the user authenticating
 - `bind_control_source_interface` (String) GigabitEthernet IEEE 802.3z
 - `bind_control_source_interface_loopback` (Number) Loopback interface
@@ -103,8 +107,6 @@ resource "iosxe_voice_class_tenant" "example" {
 - `device` (String) A device name from the provider configuration.
 - `disable_early_media` (String) Disable early-media cut through
   - Choices: `180`
-- `early_media_update_block` (Boolean) Consume SIP Update request with SDP in early-dialog
-- `early_media_update_block_re_negotiate` (Boolean) Enables end-to-end re-negotiation.
 - `early_offer_forced` (Boolean) Forcefully Send Early-Offer
 - `error_passthru` (Boolean) SIP error response pass-thru functionality
 - `g729_annexb_override` (Boolean) Override default value, yes, if annexb attribute is not present

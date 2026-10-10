@@ -110,6 +110,10 @@ type VoiceClassTenant struct {
 	AuthenticationPassword                       types.String                         `tfsdk:"authentication_password"`
 	AuthenticationPasswordWO                     types.String                         `tfsdk:"authentication_password_wo"`
 	AuthenticationPasswordWOVersion              types.Int64                          `tfsdk:"authentication_password_wo_version"`
+	AuthenticationRealmUsername                  types.String                         `tfsdk:"authentication_realm_username"`
+	AuthenticationRealmPassword                  types.String                         `tfsdk:"authentication_realm_password"`
+	AuthenticationRealmPasswordWO                types.String                         `tfsdk:"authentication_realm_password_wo"`
+	AuthenticationRealmPasswordWOVersion         types.Int64                          `tfsdk:"authentication_realm_password_wo_version"`
 	AuthenticationRealm                          types.String                         `tfsdk:"authentication_realm"`
 	CredentialsNumbers                           []VoiceClassTenantCredentialsNumbers `tfsdk:"credentials_numbers"`
 	RegistrarPrimary                             types.String                         `tfsdk:"registrar_primary"`
@@ -120,8 +124,6 @@ type VoiceClassTenant struct {
 	RegistrarSecondaryRefreshRatio               types.Int64                          `tfsdk:"registrar_secondary_refresh_ratio"`
 	AnalogDn                                     types.String                         `tfsdk:"analog_dn"`
 	AnalogDnDialPeerTag                          types.Int64                          `tfsdk:"analog_dn_dial_peer_tag"`
-	EarlyMediaUpdateBlock                        types.Bool                           `tfsdk:"early_media_update_block"`
-	EarlyMediaUpdateBlockReNegotiate             types.Bool                           `tfsdk:"early_media_update_block_re_negotiate"`
 }
 type VoiceClassTenantCredentialsNumbers struct {
 	Number            types.String `tfsdk:"number"`
@@ -203,6 +205,8 @@ type VoiceClassTenantData struct {
 	AuthenticationUsername                       types.String                             `tfsdk:"authentication_username"`
 	AuthenticationPasswordType                   types.String                             `tfsdk:"authentication_password_type"`
 	AuthenticationPassword                       types.String                             `tfsdk:"authentication_password"`
+	AuthenticationRealmUsername                  types.String                             `tfsdk:"authentication_realm_username"`
+	AuthenticationRealmPassword                  types.String                             `tfsdk:"authentication_realm_password"`
 	AuthenticationRealm                          types.String                             `tfsdk:"authentication_realm"`
 	CredentialsNumbers                           []VoiceClassTenantCredentialsNumbersData `tfsdk:"credentials_numbers"`
 	RegistrarPrimary                             types.String                             `tfsdk:"registrar_primary"`
@@ -213,8 +217,6 @@ type VoiceClassTenantData struct {
 	RegistrarSecondaryRefreshRatio               types.Int64                              `tfsdk:"registrar_secondary_refresh_ratio"`
 	AnalogDn                                     types.String                             `tfsdk:"analog_dn"`
 	AnalogDnDialPeerTag                          types.Int64                              `tfsdk:"analog_dn_dial_peer_tag"`
-	EarlyMediaUpdateBlock                        types.Bool                               `tfsdk:"early_media_update_block"`
-	EarlyMediaUpdateBlockReNegotiate             types.Bool                               `tfsdk:"early_media_update_block_re_negotiate"`
 }
 type VoiceClassTenantCredentialsNumbersData struct {
 	Number       types.String `tfsdk:"number"`
@@ -598,6 +600,16 @@ func (data VoiceClassTenant) addToBodyXML(ctx context.Context, config VoiceClass
 			body = helpers.SetFromXPath(body, data.getXPath()+"/authentication/username-password/password/password-string", data.AuthenticationPassword.ValueString())
 		}
 	}
+	if !data.AuthenticationRealmUsername.IsNull() && !data.AuthenticationRealmUsername.IsUnknown() {
+		body = helpers.SetFromXPath(body, data.getXPath()+"/authentication/auth-with-realm/username", data.AuthenticationRealmUsername.ValueString())
+	}
+	if !data.AuthenticationRealmPassword.IsNull() && !data.AuthenticationRealmPassword.IsUnknown() {
+		if !config.AuthenticationRealmPasswordWO.IsNull() {
+			body = helpers.SetFromXPath(body, data.getXPath()+"/authentication/auth-with-realm/password/password-string", config.AuthenticationRealmPasswordWO.ValueString())
+		} else {
+			body = helpers.SetFromXPath(body, data.getXPath()+"/authentication/auth-with-realm/password/password-string", data.AuthenticationRealmPassword.ValueString())
+		}
+	}
 	if !data.AuthenticationRealm.IsNull() && !data.AuthenticationRealm.IsUnknown() {
 		body = helpers.SetFromXPath(body, data.getXPath()+"/authentication/auth-with-realm/realm", data.AuthenticationRealm.ValueString())
 	}
@@ -657,20 +669,6 @@ func (data VoiceClassTenant) addToBodyXML(ctx context.Context, config VoiceClass
 	}
 	if !data.AnalogDnDialPeerTag.IsNull() && !data.AnalogDnDialPeerTag.IsUnknown() {
 		body = helpers.SetFromXPath(body, data.getXPath()+"/analog-dn/dial-peer-tag", strconv.FormatInt(data.AnalogDnDialPeerTag.ValueInt64(), 10))
-	}
-	if !data.EarlyMediaUpdateBlock.IsNull() && !data.EarlyMediaUpdateBlock.IsUnknown() {
-		if data.EarlyMediaUpdateBlock.ValueBool() {
-			body = helpers.SetFromXPath(body, data.getXPath()+"/early-media/update/block", "")
-		} else {
-			body = helpers.RemoveFromXPath(body, data.getXPath()+"/early-media/update/block")
-		}
-	}
-	if !data.EarlyMediaUpdateBlockReNegotiate.IsNull() && !data.EarlyMediaUpdateBlockReNegotiate.IsUnknown() {
-		if data.EarlyMediaUpdateBlockReNegotiate.ValueBool() {
-			body = helpers.SetFromXPath(body, data.getXPath()+"/early-media/update/block/re-negotiate", "")
-		} else {
-			body = helpers.RemoveFromXPath(body, data.getXPath()+"/early-media/update/block/re-negotiate")
-		}
 	}
 	return body
 }
@@ -1144,6 +1142,11 @@ func (data *VoiceClassTenant) updateFromBodyXML(ctx context.Context, res xmldot.
 	} else {
 		data.AuthenticationPasswordType = types.StringNull()
 	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/authentication/auth-with-realm/username"); value.Exists() && !data.AuthenticationRealmUsername.IsNull() {
+		data.AuthenticationRealmUsername = types.StringValue(value.String())
+	} else {
+		data.AuthenticationRealmUsername = types.StringNull()
+	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/authentication/auth-with-realm/realm"); value.Exists() && !data.AuthenticationRealm.IsNull() {
 		data.AuthenticationRealm = types.StringValue(value.String())
 	} else {
@@ -1232,24 +1235,6 @@ func (data *VoiceClassTenant) updateFromBodyXML(ctx context.Context, res xmldot.
 		data.AnalogDnDialPeerTag = types.Int64Value(value.Int())
 	} else {
 		data.AnalogDnDialPeerTag = types.Int64Null()
-	}
-	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/early-media/update/block"); !data.EarlyMediaUpdateBlock.IsNull() {
-		if value.Exists() {
-			data.EarlyMediaUpdateBlock = types.BoolValue(true)
-		} else {
-			data.EarlyMediaUpdateBlock = types.BoolValue(false)
-		}
-	} else {
-		data.EarlyMediaUpdateBlock = types.BoolNull()
-	}
-	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/early-media/update/block/re-negotiate"); !data.EarlyMediaUpdateBlockReNegotiate.IsNull() {
-		if value.Exists() {
-			data.EarlyMediaUpdateBlockReNegotiate = types.BoolValue(true)
-		} else {
-			data.EarlyMediaUpdateBlockReNegotiate = types.BoolValue(false)
-		}
-	} else {
-		data.EarlyMediaUpdateBlockReNegotiate = types.BoolNull()
 	}
 }
 
@@ -1526,6 +1511,12 @@ func (data *VoiceClassTenant) fromBodyXML(ctx context.Context, res xmldot.Result
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/authentication/username-password/password/password-string"); value.Exists() {
 		data.AuthenticationPassword = types.StringValue(value.String())
 	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/authentication/auth-with-realm/username"); value.Exists() {
+		data.AuthenticationRealmUsername = types.StringValue(value.String())
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/authentication/auth-with-realm/password/password-string"); value.Exists() {
+		data.AuthenticationRealmPassword = types.StringValue(value.String())
+	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/authentication/auth-with-realm/realm"); value.Exists() {
 		data.AuthenticationRealm = types.StringValue(value.String())
 	}
@@ -1575,16 +1566,6 @@ func (data *VoiceClassTenant) fromBodyXML(ctx context.Context, res xmldot.Result
 	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/analog-dn/dial-peer-tag"); value.Exists() {
 		data.AnalogDnDialPeerTag = types.Int64Value(value.Int())
-	}
-	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/early-media/update/block"); value.Exists() {
-		data.EarlyMediaUpdateBlock = types.BoolValue(true)
-	} else {
-		data.EarlyMediaUpdateBlock = types.BoolValue(false)
-	}
-	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/early-media/update/block/re-negotiate"); value.Exists() {
-		data.EarlyMediaUpdateBlockReNegotiate = types.BoolValue(true)
-	} else {
-		data.EarlyMediaUpdateBlockReNegotiate = types.BoolValue(false)
 	}
 }
 
@@ -1861,6 +1842,12 @@ func (data *VoiceClassTenantData) fromBodyXML(ctx context.Context, res xmldot.Re
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/authentication/username-password/password/password-string"); value.Exists() {
 		data.AuthenticationPassword = types.StringValue(value.String())
 	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/authentication/auth-with-realm/username"); value.Exists() {
+		data.AuthenticationRealmUsername = types.StringValue(value.String())
+	}
+	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/authentication/auth-with-realm/password/password-string"); value.Exists() {
+		data.AuthenticationRealmPassword = types.StringValue(value.String())
+	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/authentication/auth-with-realm/realm"); value.Exists() {
 		data.AuthenticationRealm = types.StringValue(value.String())
 	}
@@ -1911,16 +1898,6 @@ func (data *VoiceClassTenantData) fromBodyXML(ctx context.Context, res xmldot.Re
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/analog-dn/dial-peer-tag"); value.Exists() {
 		data.AnalogDnDialPeerTag = types.Int64Value(value.Int())
 	}
-	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/early-media/update/block"); value.Exists() {
-		data.EarlyMediaUpdateBlock = types.BoolValue(true)
-	} else {
-		data.EarlyMediaUpdateBlock = types.BoolValue(false)
-	}
-	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/early-media/update/block/re-negotiate"); value.Exists() {
-		data.EarlyMediaUpdateBlockReNegotiate = types.BoolValue(true)
-	} else {
-		data.EarlyMediaUpdateBlockReNegotiate = types.BoolValue(false)
-	}
 }
 
 // End of section. //template:end fromBodyDataXML
@@ -1929,12 +1906,6 @@ func (data *VoiceClassTenantData) fromBodyXML(ctx context.Context, res xmldot.Re
 
 func (data *VoiceClassTenant) addDeletedItemsXML(ctx context.Context, state VoiceClassTenant, body string) string {
 	b := netconf.NewBody(body)
-	if !state.EarlyMediaUpdateBlockReNegotiate.IsNull() && data.EarlyMediaUpdateBlockReNegotiate.IsNull() {
-		b = helpers.RemoveFromXPath(b, state.getXPath()+"/early-media/update/block/re-negotiate")
-	}
-	if !state.EarlyMediaUpdateBlock.IsNull() && data.EarlyMediaUpdateBlock.IsNull() {
-		b = helpers.RemoveFromXPath(b, state.getXPath()+"/early-media/update/block")
-	}
 	if !state.AnalogDnDialPeerTag.IsNull() && data.AnalogDnDialPeerTag.IsNull() {
 		b = helpers.RemoveFromXPath(b, state.getXPath()+"/analog-dn/dial-peer-tag")
 	}
@@ -2003,6 +1974,12 @@ func (data *VoiceClassTenant) addDeletedItemsXML(ctx context.Context, state Voic
 	}
 	if !state.AuthenticationRealm.IsNull() && data.AuthenticationRealm.IsNull() {
 		b = helpers.RemoveFromXPath(b, state.getXPath()+"/authentication/auth-with-realm/realm")
+	}
+	if !state.AuthenticationRealmPassword.IsNull() && data.AuthenticationRealmPassword.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/authentication/auth-with-realm/password/password-string")
+	}
+	if !state.AuthenticationRealmUsername.IsNull() && data.AuthenticationRealmUsername.IsNull() {
+		b = helpers.RemoveFromXPath(b, state.getXPath()+"/authentication/auth-with-realm/username")
 	}
 	if !state.AuthenticationPassword.IsNull() && data.AuthenticationPassword.IsNull() {
 		b = helpers.RemoveFromXPath(b, state.getXPath()+"/authentication/username-password/password/password-string")
@@ -2213,12 +2190,6 @@ func (data *VoiceClassTenant) addDeletedItemsXML(ctx context.Context, state Voic
 
 func (data *VoiceClassTenant) addDeletePathsXML(ctx context.Context, body string) string {
 	b := netconf.NewBody(body)
-	if !data.EarlyMediaUpdateBlockReNegotiate.IsNull() {
-		b = helpers.RemoveFromXPath(b, data.getXPath()+"/early-media/update/block/re-negotiate")
-	}
-	if !data.EarlyMediaUpdateBlock.IsNull() {
-		b = helpers.RemoveFromXPath(b, data.getXPath()+"/early-media/update/block")
-	}
 	if !data.AnalogDnDialPeerTag.IsNull() {
 		b = helpers.RemoveFromXPath(b, data.getXPath()+"/analog-dn/dial-peer-tag")
 	}
@@ -2255,6 +2226,12 @@ func (data *VoiceClassTenant) addDeletePathsXML(ctx context.Context, body string
 	}
 	if !data.AuthenticationRealm.IsNull() {
 		b = helpers.RemoveFromXPath(b, data.getXPath()+"/authentication/auth-with-realm/realm")
+	}
+	if !data.AuthenticationRealmPassword.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/authentication/auth-with-realm/password/password-string")
+	}
+	if !data.AuthenticationRealmUsername.IsNull() {
+		b = helpers.RemoveFromXPath(b, data.getXPath()+"/authentication/auth-with-realm/username")
 	}
 	if !data.AuthenticationPassword.IsNull() {
 		b = helpers.RemoveFromXPath(b, data.getXPath()+"/authentication/username-password/password/password-string")

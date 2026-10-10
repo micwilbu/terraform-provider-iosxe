@@ -2,6 +2,8 @@
 name: Voice Class Tenant
 path: /Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:voice/class/tenant[id=%v]
 doc_category: Voice
+# CUBE is a router feature; a switch rejects these voice resources.
+test_tags: [C8000V]
 attributes:
   - yang_name: id
     tf_name: tag
@@ -243,6 +245,12 @@ attributes:
     exclude_test: true
     example: 500
   # --- Digest authentication ---
+  # Two separate YANG containers: `username-password` (no realm) and
+  # `auth-with-realm` (username + password + realm together - the CLI
+  # `authentication username X password Y realm Z` form). Modeled explicitly so
+  # the realm form doesn't leave a half-configured `username-password` container.
+  # Excluded from the test because storing the password needs `key config-key
+  # password-encrypt` (type-6) on the device.
   - yang_name: authentication/username-password/username
     tf_name: authentication_username
     exclude_test: true
@@ -253,6 +261,16 @@ attributes:
     example: "0"
   - yang_name: authentication/username-password/password/password-string
     tf_name: authentication_password
+    sensitive: true
+    write_only: true
+    exclude_test: true
+    example: Cisco123
+  - yang_name: authentication/auth-with-realm/username
+    tf_name: authentication_realm_username
+    exclude_test: true
+    example: cube-auth
+  - yang_name: authentication/auth-with-realm/password/password-string
+    tf_name: authentication_realm_password
     sensitive: true
     write_only: true
     exclude_test: true
@@ -316,6 +334,17 @@ attributes:
     tf_name: analog_dn_dial_peer_tag
     exclude_test: true
     example: 100
+
+test_prerequisites:
+  # The tenant `early-offer` leaf has a `when` on voice service voip
+  # allow-connections, so the data plane must be active for the test.
+  - path: /Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:voice/service[type=voip]
+    no_delete: true
+    attributes:
+      - name: type
+        value: voip
+      - name: allow-connections/sip/to/sip
+        value: ""
   # --- Early-media update handling ---
   - yang_name: early-media/update/block
     tf_name: early_media_update_block
