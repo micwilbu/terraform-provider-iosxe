@@ -22,6 +22,7 @@ package provider
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -33,17 +34,29 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
 func TestAccIosxeRedundancyApplicationGroup(t *testing.T) {
+	if os.Getenv("C8000V") == "" {
+		t.Skip("skipping test, set environment variable C8000V")
+	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("iosxe_redundancy_application_group.test", "group_id", "1"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_redundancy_application_group.test", "name", "cube-rg-1"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_redundancy_application_group.test", "priority", "100"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_redundancy_application_group.test", "failover_threshold", "75"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_redundancy_application_group.test", "timers_delay", "30"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_redundancy_application_group.test", "timers_reload", "60"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_redundancy_application_group.test", "preempt", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_redundancy_application_group.test", "shutdown", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_redundancy_application_group.test", "tracks.0.object_number", "1"))
+	checks = append(checks, resource.TestCheckResourceAttr("iosxe_redundancy_application_group.test", "tracks.0.shutdown", "true"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccIosxeRedundancyApplicationGroupConfig_minimum(),
+				Config: testAccIosxeRedundancyApplicationGroupPrerequisitesConfig + testAccIosxeRedundancyApplicationGroupConfig_minimum(),
 			},
 			{
-				Config: testAccIosxeRedundancyApplicationGroupConfig_all(),
+				Config: testAccIosxeRedundancyApplicationGroupPrerequisitesConfig + testAccIosxeRedundancyApplicationGroupConfig_all(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 			{
@@ -51,7 +64,7 @@ func TestAccIosxeRedundancyApplicationGroup(t *testing.T) {
 				ImportState:             true,
 				ImportStateVerify:       true,
 				ImportStateIdFunc:       iosxeRedundancyApplicationGroupImportStateIdFunc("iosxe_redundancy_application_group.test"),
-				ImportStateVerifyIgnore: []string{"preempt", "shutdown"},
+				ImportStateVerifyIgnore: []string{},
 				Check:                   resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -74,6 +87,17 @@ func iosxeRedundancyApplicationGroupImportStateIdFunc(resourceName string) resou
 // End of section. //template:end importStateIdFunc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+const testAccIosxeRedundancyApplicationGroupPrerequisitesConfig = `
+resource "iosxe_yang" "PreReq0" {
+	path = "/Cisco-IOS-XE-native:native/track/Cisco-IOS-XE-track:tracked-object-v2[object-number=1]"
+	attributes = {
+		"object-number" = "1"
+		"stub-object" = ""
+	}
+}
+
+`
+
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
@@ -81,6 +105,7 @@ func iosxeRedundancyApplicationGroupImportStateIdFunc(resourceName string) resou
 func testAccIosxeRedundancyApplicationGroupConfig_minimum() string {
 	config := `resource "iosxe_redundancy_application_group" "test" {` + "\n"
 	config += `	group_id = 1` + "\n"
+	config += `	depends_on = [iosxe_yang.PreReq0, ]` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -92,6 +117,18 @@ func testAccIosxeRedundancyApplicationGroupConfig_minimum() string {
 func testAccIosxeRedundancyApplicationGroupConfig_all() string {
 	config := `resource "iosxe_redundancy_application_group" "test" {` + "\n"
 	config += `	group_id = 1` + "\n"
+	config += `	name = "cube-rg-1"` + "\n"
+	config += `	priority = 100` + "\n"
+	config += `	failover_threshold = 75` + "\n"
+	config += `	timers_delay = 30` + "\n"
+	config += `	timers_reload = 60` + "\n"
+	config += `	preempt = true` + "\n"
+	config += `	shutdown = false` + "\n"
+	config += `	tracks = [{` + "\n"
+	config += `		object_number = "1"` + "\n"
+	config += `		shutdown = true` + "\n"
+	config += `	}]` + "\n"
+	config += `	depends_on = [iosxe_yang.PreReq0, ]` + "\n"
 	config += `}` + "\n"
 	return config
 }

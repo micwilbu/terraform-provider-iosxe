@@ -38,45 +38,45 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 type RedundancyApplicationGroup struct {
-	Device            types.String                      `tfsdk:"device"`
-	Id                types.String                      `tfsdk:"id"`
-	DeleteMode        types.String                      `tfsdk:"delete_mode"`
-	GroupId           types.Int64                       `tfsdk:"group_id"`
-	Name              types.String                      `tfsdk:"name"`
-	Priority          types.Int64                       `tfsdk:"priority"`
-	FailoverThreshold types.Int64                       `tfsdk:"failover_threshold"`
-	TimersDelay       types.Int64                       `tfsdk:"timers_delay"`
-	TimersReload      types.Int64                       `tfsdk:"timers_reload"`
-	ControlInterface  types.String                      `tfsdk:"control_interface"`
-	ControlProtocol   types.Int64                       `tfsdk:"control_protocol"`
-	DataInterface     types.String                      `tfsdk:"data_interface"`
-	Preempt           types.Bool                        `tfsdk:"preempt"`
-	Shutdown          types.Bool                        `tfsdk:"shutdown"`
-	Track             []RedundancyApplicationGroupTrack `tfsdk:"track"`
+	Device            types.String                       `tfsdk:"device"`
+	Id                types.String                       `tfsdk:"id"`
+	DeleteMode        types.String                       `tfsdk:"delete_mode"`
+	GroupId           types.Int64                        `tfsdk:"group_id"`
+	Name              types.String                       `tfsdk:"name"`
+	Priority          types.Int64                        `tfsdk:"priority"`
+	FailoverThreshold types.Int64                        `tfsdk:"failover_threshold"`
+	TimersDelay       types.Int64                        `tfsdk:"timers_delay"`
+	TimersReload      types.Int64                        `tfsdk:"timers_reload"`
+	ControlInterface  types.String                       `tfsdk:"control_interface"`
+	ControlProtocol   types.Int64                        `tfsdk:"control_protocol"`
+	DataInterface     types.String                       `tfsdk:"data_interface"`
+	Preempt           types.Bool                         `tfsdk:"preempt"`
+	Shutdown          types.Bool                         `tfsdk:"shutdown"`
+	Tracks            []RedundancyApplicationGroupTracks `tfsdk:"tracks"`
 }
-type RedundancyApplicationGroupTrack struct {
+type RedundancyApplicationGroupTracks struct {
 	ObjectNumber types.String `tfsdk:"object_number"`
 	Shutdown     types.Bool   `tfsdk:"shutdown"`
 	Decrement    types.Int64  `tfsdk:"decrement"`
 }
 
 type RedundancyApplicationGroupData struct {
-	Device            types.String                          `tfsdk:"device"`
-	Id                types.String                          `tfsdk:"id"`
-	GroupId           types.Int64                           `tfsdk:"group_id"`
-	Name              types.String                          `tfsdk:"name"`
-	Priority          types.Int64                           `tfsdk:"priority"`
-	FailoverThreshold types.Int64                           `tfsdk:"failover_threshold"`
-	TimersDelay       types.Int64                           `tfsdk:"timers_delay"`
-	TimersReload      types.Int64                           `tfsdk:"timers_reload"`
-	ControlInterface  types.String                          `tfsdk:"control_interface"`
-	ControlProtocol   types.Int64                           `tfsdk:"control_protocol"`
-	DataInterface     types.String                          `tfsdk:"data_interface"`
-	Preempt           types.Bool                            `tfsdk:"preempt"`
-	Shutdown          types.Bool                            `tfsdk:"shutdown"`
-	Track             []RedundancyApplicationGroupTrackData `tfsdk:"track"`
+	Device            types.String                           `tfsdk:"device"`
+	Id                types.String                           `tfsdk:"id"`
+	GroupId           types.Int64                            `tfsdk:"group_id"`
+	Name              types.String                           `tfsdk:"name"`
+	Priority          types.Int64                            `tfsdk:"priority"`
+	FailoverThreshold types.Int64                            `tfsdk:"failover_threshold"`
+	TimersDelay       types.Int64                            `tfsdk:"timers_delay"`
+	TimersReload      types.Int64                            `tfsdk:"timers_reload"`
+	ControlInterface  types.String                           `tfsdk:"control_interface"`
+	ControlProtocol   types.Int64                            `tfsdk:"control_protocol"`
+	DataInterface     types.String                           `tfsdk:"data_interface"`
+	Preempt           types.Bool                             `tfsdk:"preempt"`
+	Shutdown          types.Bool                             `tfsdk:"shutdown"`
+	Tracks            []RedundancyApplicationGroupTracksData `tfsdk:"tracks"`
 }
-type RedundancyApplicationGroupTrackData struct {
+type RedundancyApplicationGroupTracksData struct {
 	ObjectNumber types.String `tfsdk:"object_number"`
 	Shutdown     types.Bool   `tfsdk:"shutdown"`
 	Decrement    types.Int64  `tfsdk:"decrement"`
@@ -164,8 +164,8 @@ func (data RedundancyApplicationGroup) addToBodyXML(ctx context.Context, config 
 			body = helpers.RemoveFromXPath(body, data.getXPath()+"/shutdown")
 		}
 	}
-	if len(data.Track) > 0 {
-		for _, item := range data.Track {
+	if len(data.Tracks) > 0 {
+		for _, item := range data.Tracks {
 			cBody := netconf.Body{}
 			if !item.ObjectNumber.IsNull() && !item.ObjectNumber.IsUnknown() {
 				cBody = helpers.SetFromXPath(cBody, "object-number", item.ObjectNumber.ValueString())
@@ -254,9 +254,9 @@ func (data *RedundancyApplicationGroup) updateFromBodyXML(ctx context.Context, r
 	} else {
 		data.Shutdown = types.BoolNull()
 	}
-	for i := range data.Track {
+	for i := range data.Tracks {
 		keys := [...]string{"object-number"}
-		keyValues := [...]string{data.Track[i].ObjectNumber.ValueString()}
+		keyValues := [...]string{data.Tracks[i].ObjectNumber.ValueString()}
 
 		var r xmldot.Result
 		helpers.GetFromXPath(res, "data"+data.getXPath()+"/Cisco-IOS-XE-track:track").ForEach(
@@ -277,24 +277,24 @@ func (data *RedundancyApplicationGroup) updateFromBodyXML(ctx context.Context, r
 				return true
 			},
 		)
-		if value := helpers.GetFromXPath(r, "object-number"); value.Exists() && !data.Track[i].ObjectNumber.IsNull() {
-			data.Track[i].ObjectNumber = types.StringValue(value.String())
+		if value := helpers.GetFromXPath(r, "object-number"); value.Exists() && !data.Tracks[i].ObjectNumber.IsNull() {
+			data.Tracks[i].ObjectNumber = types.StringValue(value.String())
 		} else {
-			data.Track[i].ObjectNumber = types.StringNull()
+			data.Tracks[i].ObjectNumber = types.StringNull()
 		}
-		if value := helpers.GetFromXPath(r, "shutdown"); !data.Track[i].Shutdown.IsNull() {
+		if value := helpers.GetFromXPath(r, "shutdown"); !data.Tracks[i].Shutdown.IsNull() {
 			if value.Exists() {
-				data.Track[i].Shutdown = types.BoolValue(true)
+				data.Tracks[i].Shutdown = types.BoolValue(true)
 			} else {
-				data.Track[i].Shutdown = types.BoolValue(false)
+				data.Tracks[i].Shutdown = types.BoolValue(false)
 			}
 		} else {
-			data.Track[i].Shutdown = types.BoolNull()
+			data.Tracks[i].Shutdown = types.BoolNull()
 		}
-		if value := helpers.GetFromXPath(r, "decrement"); value.Exists() && !data.Track[i].Decrement.IsNull() {
-			data.Track[i].Decrement = types.Int64Value(value.Int())
+		if value := helpers.GetFromXPath(r, "decrement"); value.Exists() && !data.Tracks[i].Decrement.IsNull() {
+			data.Tracks[i].Decrement = types.Int64Value(value.Int())
 		} else {
-			data.Track[i].Decrement = types.Int64Null()
+			data.Tracks[i].Decrement = types.Int64Null()
 		}
 	}
 }
@@ -339,9 +339,9 @@ func (data *RedundancyApplicationGroup) fromBodyXML(ctx context.Context, res xml
 		data.Shutdown = types.BoolValue(false)
 	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/Cisco-IOS-XE-track:track"); value.Exists() {
-		data.Track = make([]RedundancyApplicationGroupTrack, 0)
+		data.Tracks = make([]RedundancyApplicationGroupTracks, 0)
 		value.ForEach(func(_ int, v xmldot.Result) bool {
-			item := RedundancyApplicationGroupTrack{}
+			item := RedundancyApplicationGroupTracks{}
 			if cValue := helpers.GetFromXPath(v, "object-number"); cValue.Exists() {
 				item.ObjectNumber = types.StringValue(cValue.String())
 			}
@@ -353,7 +353,7 @@ func (data *RedundancyApplicationGroup) fromBodyXML(ctx context.Context, res xml
 			if cValue := helpers.GetFromXPath(v, "decrement"); cValue.Exists() {
 				item.Decrement = types.Int64Value(cValue.Int())
 			}
-			data.Track = append(data.Track, item)
+			data.Tracks = append(data.Tracks, item)
 			return true
 		})
 	}
@@ -399,9 +399,9 @@ func (data *RedundancyApplicationGroupData) fromBodyXML(ctx context.Context, res
 		data.Shutdown = types.BoolValue(false)
 	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/Cisco-IOS-XE-track:track"); value.Exists() {
-		data.Track = make([]RedundancyApplicationGroupTrackData, 0)
+		data.Tracks = make([]RedundancyApplicationGroupTracksData, 0)
 		value.ForEach(func(_ int, v xmldot.Result) bool {
-			item := RedundancyApplicationGroupTrackData{}
+			item := RedundancyApplicationGroupTracksData{}
 			if cValue := helpers.GetFromXPath(v, "object-number"); cValue.Exists() {
 				item.ObjectNumber = types.StringValue(cValue.String())
 			}
@@ -413,7 +413,7 @@ func (data *RedundancyApplicationGroupData) fromBodyXML(ctx context.Context, res
 			if cValue := helpers.GetFromXPath(v, "decrement"); cValue.Exists() {
 				item.Decrement = types.Int64Value(cValue.Int())
 			}
-			data.Track = append(data.Track, item)
+			data.Tracks = append(data.Tracks, item)
 			return true
 		})
 	}
@@ -425,16 +425,16 @@ func (data *RedundancyApplicationGroupData) fromBodyXML(ctx context.Context, res
 
 func (data *RedundancyApplicationGroup) addDeletedItemsXML(ctx context.Context, state RedundancyApplicationGroup, body string) string {
 	b := netconf.NewBody(body)
-	for i := range state.Track {
+	for i := range state.Tracks {
 		stateKeys := [...]string{"object-number"}
-		stateKeyValues := [...]string{state.Track[i].ObjectNumber.ValueString()}
+		stateKeyValues := [...]string{state.Tracks[i].ObjectNumber.ValueString()}
 		predicates := ""
 		for i := range stateKeys {
 			predicates += fmt.Sprintf("[%s='%s']", stateKeys[i], stateKeyValues[i])
 		}
 
 		emptyKeys := true
-		if !reflect.ValueOf(state.Track[i].ObjectNumber.ValueString()).IsZero() {
+		if !reflect.ValueOf(state.Tracks[i].ObjectNumber.ValueString()).IsZero() {
 			emptyKeys = false
 		}
 		if emptyKeys {
@@ -442,16 +442,16 @@ func (data *RedundancyApplicationGroup) addDeletedItemsXML(ctx context.Context, 
 		}
 
 		found := false
-		for j := range data.Track {
+		for j := range data.Tracks {
 			found = true
-			if state.Track[i].ObjectNumber.ValueString() != data.Track[j].ObjectNumber.ValueString() {
+			if state.Tracks[i].ObjectNumber.ValueString() != data.Tracks[j].ObjectNumber.ValueString() {
 				found = false
 			}
 			if found {
-				if !state.Track[i].Decrement.IsNull() && data.Track[j].Decrement.IsNull() {
+				if !state.Tracks[i].Decrement.IsNull() && data.Tracks[j].Decrement.IsNull() {
 					b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/Cisco-IOS-XE-track:track%v/decrement", predicates))
 				}
-				if !state.Track[i].Shutdown.IsNull() && data.Track[j].Shutdown.IsNull() {
+				if !state.Tracks[i].Shutdown.IsNull() && data.Tracks[j].Shutdown.IsNull() {
 					b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/Cisco-IOS-XE-track:track%v/shutdown", predicates))
 				}
 				break
@@ -502,9 +502,9 @@ func (data *RedundancyApplicationGroup) addDeletedItemsXML(ctx context.Context, 
 
 func (data *RedundancyApplicationGroup) addDeletePathsXML(ctx context.Context, body string) string {
 	b := netconf.NewBody(body)
-	for i := range data.Track {
+	for i := range data.Tracks {
 		keys := [...]string{"object-number"}
-		keyValues := [...]string{data.Track[i].ObjectNumber.ValueString()}
+		keyValues := [...]string{data.Tracks[i].ObjectNumber.ValueString()}
 		predicates := ""
 		for i := range keys {
 			predicates += fmt.Sprintf("[%s='%s']", keys[i], keyValues[i])

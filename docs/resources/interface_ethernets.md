@@ -427,7 +427,7 @@ Optional:
 Required:
 
 - `ip_family` (String) IP Address family
-  - Choices: `ip`, `ipv6`
+  - Choices: `ip`
 
 Optional:
 

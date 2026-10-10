@@ -14,7 +14,20 @@ This resource can manage the Redundancy Application Group configuration.
 
 ```terraform
 resource "iosxe_redundancy_application_group" "example" {
-  group_id = 1
+  group_id           = 1
+  name               = "cube-rg-1"
+  priority           = 100
+  failover_threshold = 75
+  timers_delay       = 30
+  timers_reload      = 60
+  preempt            = true
+  shutdown           = false
+  tracks = [
+    {
+      object_number = "1"
+      shutdown      = true
+    }
+  ]
 }
 ```
 
@@ -46,14 +59,14 @@ resource "iosxe_redundancy_application_group" "example" {
   - Range: `0`-`10000`
 - `timers_reload` (Number) RG group reload timer. Value in seconds
   - Range: `0`-`10000`
-- `track` (Attributes List) RG group tracking (see [below for nested schema](#nestedatt--track))
+- `tracks` (Attributes List) RG group tracking (see [below for nested schema](#nestedatt--tracks))
 
 ### Read-Only
 
 - `id` (String) The path of the object.
 
-<a id="nestedatt--track"></a>
-### Nested Schema for `track`
+<a id="nestedatt--tracks"></a>
+### Nested Schema for `tracks`
 
 Required:
 

@@ -1011,10 +1011,10 @@ func (r *InterfaceEthernetsResource) Schema(ctx context.Context, req resource.Sc
 										NestedObject: schema.NestedAttributeObject{
 											Attributes: map[string]schema.Attribute{
 												"ip_family": schema.StringAttribute{
-													MarkdownDescription: helpers.NewAttributeDescription("IP Address family").AddStringEnumDescription("ip", "ipv6").String,
+													MarkdownDescription: helpers.NewAttributeDescription("IP Address family").AddStringEnumDescription("ip").String,
 													Required:            true,
 													Validators: []validator.String{
-														stringvalidator.OneOf("ip", "ipv6"),
+														stringvalidator.OneOf("ip"),
 													},
 												},
 												"ipv4_address": schema.StringAttribute{

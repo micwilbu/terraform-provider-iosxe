@@ -155,7 +155,7 @@ func (r *RedundancyApplicationGroupResource) Schema(ctx context.Context, req res
 				MarkdownDescription: helpers.NewAttributeDescription("Shutdown the selected group").String,
 				Optional:            true,
 			},
-			"track": schema.ListNestedAttribute{
+			"tracks": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("RG group tracking").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{

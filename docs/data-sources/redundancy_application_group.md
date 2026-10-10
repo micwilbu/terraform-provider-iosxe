@@ -42,10 +42,10 @@ data "iosxe_redundancy_application_group" "example" {
 - `shutdown` (Boolean) Shutdown the selected group
 - `timers_delay` (Number) RG group delay timer. value in seconds
 - `timers_reload` (Number) RG group reload timer. Value in seconds
-- `track` (Attributes List) RG group tracking (see [below for nested schema](#nestedatt--track))
+- `tracks` (Attributes List) RG group tracking (see [below for nested schema](#nestedatt--tracks))
 
-<a id="nestedatt--track"></a>
-### Nested Schema for `track`
+<a id="nestedatt--tracks"></a>
+### Nested Schema for `tracks`
 
 Read-Only:
 
