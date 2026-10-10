@@ -21,6 +21,7 @@ package provider
 
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -31,10 +32,20 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
 
 func TestAccDataSourceIosxeVoiceRegisterPool(t *testing.T) {
+	if os.Getenv("C8000V") == "" {
+		t.Skip("skipping test, set environment variable C8000V")
+	}
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_register_pool.test", "id_network_address", "0.0.0.0"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_register_pool.test", "id_network_mask", "0.0.0.0"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_register_pool.test", "id_network_address", "192.0.2.0"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_register_pool.test", "id_network_mask", "255.255.255.0"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_register_pool.test", "call_forward_b2bua_all", "1001"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_register_pool.test", "call_forward_b2bua_busy", "1001"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_register_pool.test", "call_forward_b2bua_mailbox", "1001"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_register_pool.test", "call_forward_b2bua_noan", "1001"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_register_pool.test", "call_forward_b2bua_noan_timeout", "20"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_register_pool.test", "dtmf_relay_rtp_nte", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_register_pool.test", "dtmf_relay_sip_kpml", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.iosxe_voice_register_pool.test", "dtmf_relay_sip_notify", "true"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -68,9 +79,16 @@ func testAccDataSourceIosxeVoiceRegisterPoolConfig() string {
 	config := `resource "iosxe_voice_register_pool" "test" {` + "\n"
 	config += `	delete_mode = "attributes"` + "\n"
 	config += `	tag = 1` + "\n"
-	config += `	id_network_address = "0.0.0.0"` + "\n"
-	config += `	id_network_mask = "0.0.0.0"` + "\n"
+	config += `	id_network_address = "192.0.2.0"` + "\n"
+	config += `	id_network_mask = "255.255.255.0"` + "\n"
+	config += `	call_forward_b2bua_all = "1001"` + "\n"
+	config += `	call_forward_b2bua_busy = "1001"` + "\n"
+	config += `	call_forward_b2bua_mailbox = "1001"` + "\n"
+	config += `	call_forward_b2bua_noan = "1001"` + "\n"
+	config += `	call_forward_b2bua_noan_timeout = 20` + "\n"
 	config += `	dtmf_relay_rtp_nte = true` + "\n"
+	config += `	dtmf_relay_sip_kpml = true` + "\n"
+	config += `	dtmf_relay_sip_notify = true` + "\n"
 	config += `	depends_on = [iosxe_yang.PreReq0, ]` + "\n"
 	config += `}` + "\n"
 

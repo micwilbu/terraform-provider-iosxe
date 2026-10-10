@@ -54,8 +54,11 @@ data "iosxe_voice_register_pool" "example" {
 
 Read-Only:
 
+- `hyphen` (String) number range
 - `id` (String) corlist tag
+- `lowerbound` (String) cor list matched number or lower bound number
 - `name` (String) cor list name
+- `upperbound` (String) cor list matched number or lower bound number
 
 
 <a id="nestedatt--cor_outgoing"></a>
@@ -63,5 +66,8 @@ Read-Only:
 
 Read-Only:
 
+- `hyphen` (String) number range
 - `id` (String) cor list tag
+- `lowerbound` (String) cor list matched number or lower bound number
 - `name` (String) cor list name
+- `upperbound` (String) cor list matched number or lower bound number

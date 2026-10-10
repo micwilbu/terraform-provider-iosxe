@@ -133,6 +133,18 @@ func (d *VoiceRegisterPoolDataSource) Schema(ctx context.Context, req datasource
 							MarkdownDescription: "cor list name",
 							Computed:            true,
 						},
+						"lowerbound": schema.StringAttribute{
+							MarkdownDescription: "cor list matched number or lower bound number",
+							Computed:            true,
+						},
+						"hyphen": schema.StringAttribute{
+							MarkdownDescription: "number range",
+							Computed:            true,
+						},
+						"upperbound": schema.StringAttribute{
+							MarkdownDescription: "cor list matched number or lower bound number",
+							Computed:            true,
+						},
 					},
 				},
 			},
@@ -147,6 +159,18 @@ func (d *VoiceRegisterPoolDataSource) Schema(ctx context.Context, req datasource
 						},
 						"name": schema.StringAttribute{
 							MarkdownDescription: "cor list name",
+							Computed:            true,
+						},
+						"lowerbound": schema.StringAttribute{
+							MarkdownDescription: "cor list matched number or lower bound number",
+							Computed:            true,
+						},
+						"hyphen": schema.StringAttribute{
+							MarkdownDescription: "number range",
+							Computed:            true,
+						},
+						"upperbound": schema.StringAttribute{
+							MarkdownDescription: "cor list matched number or lower bound number",
 							Computed:            true,
 						},
 					},

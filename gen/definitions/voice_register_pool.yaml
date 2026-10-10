@@ -2,6 +2,8 @@
 name: Voice Register Pool
 path: /Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:voice/register/pool[pool-tag=%v]
 doc_category: Voice
+# CUBE/SRST is a router feature; a switch rejects voice register config.
+test_tags: [C8000V]
 # A pool has a YANG `when "../global and ../global/max-pool"`, so
 # `voice register global` with `max-pool` must exist before any pool.
 test_prerequisites:
@@ -18,31 +20,26 @@ attributes:
   - yang_name: id/network/ipaddress/ipv4/ipv4address/address
     xpath: id/network/ipv4address/address
     tf_name: id_network_address
-    example: 0.0.0.0
+    example: 192.0.2.0
   - yang_name: id/network/ipaddress/ipv4/ipv4address/mask
     xpath: id/network/ipv4address/mask
     tf_name: id_network_mask
-    example: 0.0.0.0
+    example: 255.255.255.0
   # --- Call forward (B2BUA) ---
   - yang_name: call-forward/b2bua/all
     tf_name: call_forward_b2bua_all
-    exclude_test: true
     example: "1001"
   - yang_name: call-forward/b2bua/busy
     tf_name: call_forward_b2bua_busy
-    exclude_test: true
     example: "1001"
   - yang_name: call-forward/b2bua/mailbox
     tf_name: call_forward_b2bua_mailbox
-    exclude_test: true
     example: "1001"
   - yang_name: call-forward/b2bua/noan-config/noan
     tf_name: call_forward_b2bua_noan
-    exclude_test: true
     example: "1001"
   - yang_name: call-forward/b2bua/noan-config/timeout
     tf_name: call_forward_b2bua_noan_timeout
-    exclude_test: true
     example: 20
   # --- Voice class references ---
   # codec is a leafref to `voice class codec` (iosxe_voice_class_codec, added in
@@ -61,13 +58,14 @@ attributes:
     example: true
   - yang_name: dtmf-relay/sip-kpml
     tf_name: dtmf_relay_sip_kpml
-    exclude_test: true
     example: true
   - yang_name: dtmf-relay/sip-notify
     tf_name: dtmf_relay_sip_notify
-    exclude_test: true
     example: true
   # --- Class of Restriction (references dial-peer cor lists) ---
+  # `name` is a leafref to a `dial-peer cor list`; full testing needs that list
+  # as a prerequisite, so the cor lists stay excluded from this resource's test.
+  # lowerbound/hyphen/upperbound express a number range (`when id != 'default'`).
   - yang_name: cor/incoming
     tf_name: cor_incoming
     type: List
@@ -78,6 +76,12 @@ attributes:
         example: default
       - yang_name: name
         example: WxC-DefaultPermissions
+      - yang_name: lowerbound
+        example: "1000"
+      - yang_name: hyphen
+        example: "-"
+      - yang_name: upperbound
+        example: "1999"
   - yang_name: cor/outgoing
     tf_name: cor_outgoing
     type: List
@@ -88,6 +92,12 @@ attributes:
         example: default
       - yang_name: name
         example: WxC-DefaultPermissions
+      - yang_name: lowerbound
+        example: "1000"
+      - yang_name: hyphen
+        example: "-"
+      - yang_name: upperbound
+        example: "1999"
   # --- Translation profiles ---
   - yang_name: translation-profile/incoming
     tf_name: translation_profile_incoming

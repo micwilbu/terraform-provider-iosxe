@@ -14,10 +14,17 @@ This resource can manage the Voice Register Pool configuration.
 
 ```terraform
 resource "iosxe_voice_register_pool" "example" {
-  tag                = 1
-  id_network_address = "0.0.0.0"
-  id_network_mask    = "0.0.0.0"
-  dtmf_relay_rtp_nte = true
+  tag                             = 1
+  id_network_address              = "192.0.2.0"
+  id_network_mask                 = "255.255.255.0"
+  call_forward_b2bua_all          = "1001"
+  call_forward_b2bua_busy         = "1001"
+  call_forward_b2bua_mailbox      = "1001"
+  call_forward_b2bua_noan         = "1001"
+  call_forward_b2bua_noan_timeout = 20
+  dtmf_relay_rtp_nte              = true
+  dtmf_relay_sip_kpml             = true
+  dtmf_relay_sip_notify           = true
 }
 ```
 
@@ -65,7 +72,11 @@ Required:
 
 Optional:
 
+- `hyphen` (String) number range
+  - Choices: `-`
+- `lowerbound` (String) cor list matched number or lower bound number
 - `name` (String) cor list name
+- `upperbound` (String) cor list matched number or lower bound number
 
 
 <a id="nestedatt--cor_outgoing"></a>
@@ -77,7 +88,11 @@ Required:
 
 Optional:
 
+- `hyphen` (String) number range
+  - Choices: `-`
+- `lowerbound` (String) cor list matched number or lower bound number
 - `name` (String) cor list name
+- `upperbound` (String) cor list matched number or lower bound number
 
 ## Import
 

@@ -60,12 +60,18 @@ type VoiceRegisterPool struct {
 	TranslationProfileOutgoing  types.String                   `tfsdk:"translation_profile_outgoing"`
 }
 type VoiceRegisterPoolCorIncoming struct {
-	Id   types.String `tfsdk:"id"`
-	Name types.String `tfsdk:"name"`
+	Id         types.String `tfsdk:"id"`
+	Name       types.String `tfsdk:"name"`
+	Lowerbound types.String `tfsdk:"lowerbound"`
+	Hyphen     types.String `tfsdk:"hyphen"`
+	Upperbound types.String `tfsdk:"upperbound"`
 }
 type VoiceRegisterPoolCorOutgoing struct {
-	Id   types.String `tfsdk:"id"`
-	Name types.String `tfsdk:"name"`
+	Id         types.String `tfsdk:"id"`
+	Name       types.String `tfsdk:"name"`
+	Lowerbound types.String `tfsdk:"lowerbound"`
+	Hyphen     types.String `tfsdk:"hyphen"`
+	Upperbound types.String `tfsdk:"upperbound"`
 }
 
 type VoiceRegisterPoolData struct {
@@ -90,12 +96,18 @@ type VoiceRegisterPoolData struct {
 	TranslationProfileOutgoing  types.String                       `tfsdk:"translation_profile_outgoing"`
 }
 type VoiceRegisterPoolCorIncomingData struct {
-	Id   types.String `tfsdk:"id"`
-	Name types.String `tfsdk:"name"`
+	Id         types.String `tfsdk:"id"`
+	Name       types.String `tfsdk:"name"`
+	Lowerbound types.String `tfsdk:"lowerbound"`
+	Hyphen     types.String `tfsdk:"hyphen"`
+	Upperbound types.String `tfsdk:"upperbound"`
 }
 type VoiceRegisterPoolCorOutgoingData struct {
-	Id   types.String `tfsdk:"id"`
-	Name types.String `tfsdk:"name"`
+	Id         types.String `tfsdk:"id"`
+	Name       types.String `tfsdk:"name"`
+	Lowerbound types.String `tfsdk:"lowerbound"`
+	Hyphen     types.String `tfsdk:"hyphen"`
+	Upperbound types.String `tfsdk:"upperbound"`
 }
 
 // End of section. //template:end types
@@ -199,6 +211,15 @@ func (data VoiceRegisterPool) addToBodyXML(ctx context.Context, config VoiceRegi
 			if !item.Name.IsNull() && !item.Name.IsUnknown() {
 				cBody = helpers.SetFromXPath(cBody, "name", item.Name.ValueString())
 			}
+			if !item.Lowerbound.IsNull() && !item.Lowerbound.IsUnknown() {
+				cBody = helpers.SetFromXPath(cBody, "lowerbound", item.Lowerbound.ValueString())
+			}
+			if !item.Hyphen.IsNull() && !item.Hyphen.IsUnknown() {
+				cBody = helpers.SetFromXPath(cBody, "hyphen", item.Hyphen.ValueString())
+			}
+			if !item.Upperbound.IsNull() && !item.Upperbound.IsUnknown() {
+				cBody = helpers.SetFromXPath(cBody, "upperbound", item.Upperbound.ValueString())
+			}
 			body = helpers.SetRawFromXPath(body, data.getXPath()+"/cor/incoming", cBody.Res())
 		}
 	}
@@ -210,6 +231,15 @@ func (data VoiceRegisterPool) addToBodyXML(ctx context.Context, config VoiceRegi
 			}
 			if !item.Name.IsNull() && !item.Name.IsUnknown() {
 				cBody = helpers.SetFromXPath(cBody, "name", item.Name.ValueString())
+			}
+			if !item.Lowerbound.IsNull() && !item.Lowerbound.IsUnknown() {
+				cBody = helpers.SetFromXPath(cBody, "lowerbound", item.Lowerbound.ValueString())
+			}
+			if !item.Hyphen.IsNull() && !item.Hyphen.IsUnknown() {
+				cBody = helpers.SetFromXPath(cBody, "hyphen", item.Hyphen.ValueString())
+			}
+			if !item.Upperbound.IsNull() && !item.Upperbound.IsUnknown() {
+				cBody = helpers.SetFromXPath(cBody, "upperbound", item.Upperbound.ValueString())
 			}
 			body = helpers.SetRawFromXPath(body, data.getXPath()+"/cor/outgoing", cBody.Res())
 		}
@@ -338,6 +368,21 @@ func (data *VoiceRegisterPool) updateFromBodyXML(ctx context.Context, res xmldot
 		} else {
 			data.CorIncoming[i].Name = types.StringNull()
 		}
+		if value := helpers.GetFromXPath(r, "lowerbound"); value.Exists() && !data.CorIncoming[i].Lowerbound.IsNull() {
+			data.CorIncoming[i].Lowerbound = types.StringValue(value.String())
+		} else {
+			data.CorIncoming[i].Lowerbound = types.StringNull()
+		}
+		if value := helpers.GetFromXPath(r, "hyphen"); value.Exists() && !data.CorIncoming[i].Hyphen.IsNull() {
+			data.CorIncoming[i].Hyphen = types.StringValue(value.String())
+		} else {
+			data.CorIncoming[i].Hyphen = types.StringNull()
+		}
+		if value := helpers.GetFromXPath(r, "upperbound"); value.Exists() && !data.CorIncoming[i].Upperbound.IsNull() {
+			data.CorIncoming[i].Upperbound = types.StringValue(value.String())
+		} else {
+			data.CorIncoming[i].Upperbound = types.StringNull()
+		}
 	}
 	for i := range data.CorOutgoing {
 		keys := [...]string{"id"}
@@ -371,6 +416,21 @@ func (data *VoiceRegisterPool) updateFromBodyXML(ctx context.Context, res xmldot
 			data.CorOutgoing[i].Name = types.StringValue(value.String())
 		} else {
 			data.CorOutgoing[i].Name = types.StringNull()
+		}
+		if value := helpers.GetFromXPath(r, "lowerbound"); value.Exists() && !data.CorOutgoing[i].Lowerbound.IsNull() {
+			data.CorOutgoing[i].Lowerbound = types.StringValue(value.String())
+		} else {
+			data.CorOutgoing[i].Lowerbound = types.StringNull()
+		}
+		if value := helpers.GetFromXPath(r, "hyphen"); value.Exists() && !data.CorOutgoing[i].Hyphen.IsNull() {
+			data.CorOutgoing[i].Hyphen = types.StringValue(value.String())
+		} else {
+			data.CorOutgoing[i].Hyphen = types.StringNull()
+		}
+		if value := helpers.GetFromXPath(r, "upperbound"); value.Exists() && !data.CorOutgoing[i].Upperbound.IsNull() {
+			data.CorOutgoing[i].Upperbound = types.StringValue(value.String())
+		} else {
+			data.CorOutgoing[i].Upperbound = types.StringNull()
 		}
 	}
 	if value := helpers.GetFromXPath(res, "data"+data.getXPath()+"/translation-profile/incoming"); value.Exists() && !data.TranslationProfileIncoming.IsNull() {
@@ -442,6 +502,15 @@ func (data *VoiceRegisterPool) fromBodyXML(ctx context.Context, res xmldot.Resul
 			if cValue := helpers.GetFromXPath(v, "name"); cValue.Exists() {
 				item.Name = types.StringValue(cValue.String())
 			}
+			if cValue := helpers.GetFromXPath(v, "lowerbound"); cValue.Exists() {
+				item.Lowerbound = types.StringValue(cValue.String())
+			}
+			if cValue := helpers.GetFromXPath(v, "hyphen"); cValue.Exists() {
+				item.Hyphen = types.StringValue(cValue.String())
+			}
+			if cValue := helpers.GetFromXPath(v, "upperbound"); cValue.Exists() {
+				item.Upperbound = types.StringValue(cValue.String())
+			}
 			data.CorIncoming = append(data.CorIncoming, item)
 			return true
 		})
@@ -455,6 +524,15 @@ func (data *VoiceRegisterPool) fromBodyXML(ctx context.Context, res xmldot.Resul
 			}
 			if cValue := helpers.GetFromXPath(v, "name"); cValue.Exists() {
 				item.Name = types.StringValue(cValue.String())
+			}
+			if cValue := helpers.GetFromXPath(v, "lowerbound"); cValue.Exists() {
+				item.Lowerbound = types.StringValue(cValue.String())
+			}
+			if cValue := helpers.GetFromXPath(v, "hyphen"); cValue.Exists() {
+				item.Hyphen = types.StringValue(cValue.String())
+			}
+			if cValue := helpers.GetFromXPath(v, "upperbound"); cValue.Exists() {
+				item.Upperbound = types.StringValue(cValue.String())
 			}
 			data.CorOutgoing = append(data.CorOutgoing, item)
 			return true
@@ -525,6 +603,15 @@ func (data *VoiceRegisterPoolData) fromBodyXML(ctx context.Context, res xmldot.R
 			if cValue := helpers.GetFromXPath(v, "name"); cValue.Exists() {
 				item.Name = types.StringValue(cValue.String())
 			}
+			if cValue := helpers.GetFromXPath(v, "lowerbound"); cValue.Exists() {
+				item.Lowerbound = types.StringValue(cValue.String())
+			}
+			if cValue := helpers.GetFromXPath(v, "hyphen"); cValue.Exists() {
+				item.Hyphen = types.StringValue(cValue.String())
+			}
+			if cValue := helpers.GetFromXPath(v, "upperbound"); cValue.Exists() {
+				item.Upperbound = types.StringValue(cValue.String())
+			}
 			data.CorIncoming = append(data.CorIncoming, item)
 			return true
 		})
@@ -538,6 +625,15 @@ func (data *VoiceRegisterPoolData) fromBodyXML(ctx context.Context, res xmldot.R
 			}
 			if cValue := helpers.GetFromXPath(v, "name"); cValue.Exists() {
 				item.Name = types.StringValue(cValue.String())
+			}
+			if cValue := helpers.GetFromXPath(v, "lowerbound"); cValue.Exists() {
+				item.Lowerbound = types.StringValue(cValue.String())
+			}
+			if cValue := helpers.GetFromXPath(v, "hyphen"); cValue.Exists() {
+				item.Hyphen = types.StringValue(cValue.String())
+			}
+			if cValue := helpers.GetFromXPath(v, "upperbound"); cValue.Exists() {
+				item.Upperbound = types.StringValue(cValue.String())
 			}
 			data.CorOutgoing = append(data.CorOutgoing, item)
 			return true
@@ -586,6 +682,15 @@ func (data *VoiceRegisterPool) addDeletedItemsXML(ctx context.Context, state Voi
 				found = false
 			}
 			if found {
+				if !state.CorOutgoing[i].Upperbound.IsNull() && data.CorOutgoing[j].Upperbound.IsNull() {
+					b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/cor/outgoing%v/upperbound", predicates))
+				}
+				if !state.CorOutgoing[i].Hyphen.IsNull() && data.CorOutgoing[j].Hyphen.IsNull() {
+					b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/cor/outgoing%v/hyphen", predicates))
+				}
+				if !state.CorOutgoing[i].Lowerbound.IsNull() && data.CorOutgoing[j].Lowerbound.IsNull() {
+					b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/cor/outgoing%v/lowerbound", predicates))
+				}
 				if !state.CorOutgoing[i].Name.IsNull() && data.CorOutgoing[j].Name.IsNull() {
 					b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/cor/outgoing%v/name", predicates))
 				}
@@ -619,6 +724,15 @@ func (data *VoiceRegisterPool) addDeletedItemsXML(ctx context.Context, state Voi
 				found = false
 			}
 			if found {
+				if !state.CorIncoming[i].Upperbound.IsNull() && data.CorIncoming[j].Upperbound.IsNull() {
+					b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/cor/incoming%v/upperbound", predicates))
+				}
+				if !state.CorIncoming[i].Hyphen.IsNull() && data.CorIncoming[j].Hyphen.IsNull() {
+					b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/cor/incoming%v/hyphen", predicates))
+				}
+				if !state.CorIncoming[i].Lowerbound.IsNull() && data.CorIncoming[j].Lowerbound.IsNull() {
+					b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/cor/incoming%v/lowerbound", predicates))
+				}
 				if !state.CorIncoming[i].Name.IsNull() && data.CorIncoming[j].Name.IsNull() {
 					b = helpers.RemoveFromXPath(b, fmt.Sprintf(state.getXPath()+"/cor/incoming%v/name", predicates))
 				}

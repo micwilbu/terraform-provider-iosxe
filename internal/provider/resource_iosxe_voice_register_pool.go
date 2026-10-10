@@ -180,6 +180,29 @@ func (r *VoiceRegisterPoolResource) Schema(ctx context.Context, req resource.Sch
 							MarkdownDescription: helpers.NewAttributeDescription("cor list name").String,
 							Optional:            true,
 						},
+						"lowerbound": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("cor list matched number or lower bound number").String,
+							Optional:            true,
+							Validators: []validator.String{
+								stringvalidator.LengthBetween(1, 32),
+								stringvalidator.RegexMatches(regexp.MustCompile(`((((\^)(\+))?([0-9,#*A-F])*T?)($)?)`), ""),
+							},
+						},
+						"hyphen": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("number range").AddStringEnumDescription("-").String,
+							Optional:            true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("-"),
+							},
+						},
+						"upperbound": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("cor list matched number or lower bound number").String,
+							Optional:            true,
+							Validators: []validator.String{
+								stringvalidator.LengthBetween(1, 32),
+								stringvalidator.RegexMatches(regexp.MustCompile(`((((\^)(\+))?([0-9,#*A-F])*T?)($)?)`), ""),
+							},
+						},
 					},
 				},
 			},
@@ -195,6 +218,29 @@ func (r *VoiceRegisterPoolResource) Schema(ctx context.Context, req resource.Sch
 						"name": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("cor list name").String,
 							Optional:            true,
+						},
+						"lowerbound": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("cor list matched number or lower bound number").String,
+							Optional:            true,
+							Validators: []validator.String{
+								stringvalidator.LengthBetween(1, 32),
+								stringvalidator.RegexMatches(regexp.MustCompile(`((((\^)(\+))?([0-9,#*A-F])*T?)($)?)`), ""),
+							},
+						},
+						"hyphen": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("number range").AddStringEnumDescription("-").String,
+							Optional:            true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("-"),
+							},
+						},
+						"upperbound": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("cor list matched number or lower bound number").String,
+							Optional:            true,
+							Validators: []validator.String{
+								stringvalidator.LengthBetween(1, 32),
+								stringvalidator.RegexMatches(regexp.MustCompile(`((((\^)(\+))?([0-9,#*A-F])*T?)($)?)`), ""),
+							},
 						},
 					},
 				},
