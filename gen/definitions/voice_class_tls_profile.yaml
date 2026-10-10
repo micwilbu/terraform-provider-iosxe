@@ -2,6 +2,8 @@
 name: Voice Class TLS Profile
 path: /Cisco-IOS-XE-native:native/Cisco-IOS-XE-voice:voice/class/tls-profile[id=%v]
 doc_category: Voice
+# CUBE is a router feature; a switch rejects `voice class tls-profile`.
+test_tags: [C8000V]
 attributes:
   - yang_name: id
     tf_name: tag
